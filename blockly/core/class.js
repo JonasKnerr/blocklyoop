@@ -78,22 +78,9 @@ Blockly.Class.getMethods = function(workspace, classname) {
   for (var i = 0; i < blocks.length; i++) {
     if (blocks[i].getStatement) {
       if (classname == blocks[i].getClassDef()) {
-        var currentBlock;
-        var nextBlock;
-        currentBlock = blocks[i].getStatement();
-        if (currentBlock) {
-          //methods.push([currentBlock.getFieldValue("NAME"), "FUNCTION_" + currentBlock.getFieldValue("NAME")]);
-          methods.push(currentBlock);
-          while (currentBlock.getNextBlock()) {
-            nextBlock = currentBlock.getNextBlock();
-            //methods.push([nextBlock.getFieldValue("NAME"), "FUNCTION_" + nextBlock.getFieldValue("NAME")]);
-            methods.push(nextBlock);
-            currentBlock = nextBlock;
-          }
-        }
+        methods = blocks[i].methods;
       }
     }
-    break;
   }
   return methods;
 };
@@ -198,9 +185,9 @@ Blockly.Class.isNameUsed = function(name, workspace, opt_exclude, type) {
         }
       }
     }
-    if (type == "instance") {
-      if (blocks[i].getInstanceDef) {
-        var procName = blocks[i].getInstanceDef()[1];
+    if (type == "method") {
+      if (blocks[i].getMethodDef) {
+        var procName = blocks[i].getMethodDef()[0];
         if (Blockly.Names.equals(procName, name)) {
           return true;
         }
@@ -235,18 +222,15 @@ Blockly.Class.renameClass = function(name) {
   return legalName;
 };
 
-Blockly.Class.renameInstance = function(name) {
+Blockly.Class.renameMethod = function(name) {
   var oldName = this.text_;
   name = name.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "");
-  var legalName = Blockly.Class.findLegalName(name, this.sourceBlock_, "instance");
+  var legalName = Blockly.Class.findLegalName(name, this.sourceBlock_, "method");
   if (oldName != name && oldName != legalName) {
     var blocks = this.sourceBlock_.workspace.getAllBlocks(false);
     for (var i = 0; i < blocks.length; i++) {
-      if (blocks[i].renameInstance) {
-        blocks[i].renameInstance(oldName, legalName);
-      }
-      if (blocks[i].changeOutput) {
-        blocks[i].changeOutput(legalName);
+      if (blocks[i].renameProcedure) {
+        blocks[i].renameProcedure(oldName, legalName);
       }
     }
   }

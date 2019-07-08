@@ -93,20 +93,37 @@ Blockly.Blocks["class_class"] = {
     this.appendDummyInput()
       .appendField("Klasse")
       .appendField(nameField, "NAME");
-    this.appendStatementInput("METHODS")
-      .setCheck(["class_function_noreturn", "class_function_return"])
-      .appendField("Methoden");
+    this.appendDummyInput("METHODS").appendField("Methoden");
+    this.appendStatementInput("METHODS0").setCheck([
+      "class_function_noreturn",
+      "class_function_return"
+    ]);
     this.setColour(Blockly.Class.colour());
     this.setConstructor(true);
     this.setMutator(new Blockly.Mutator(["class_attribute"], this));
     this.attributeCount = 0;
     this.methodCount = 0;
+    this.methods = [];
     this.attributeInputs = [];
     this.oldName = "";
     this.hasConstr = true;
     this.statementConnection_ = null;
+    this.methodCount = 0;
     this.setTooltip("");
     this.setHelpUrl("");
+  },
+  onchange: function() {
+    if (this.getInputTargetBlock("METHODS" + this.methodCount)) {
+      var inputBlock = this.getInputTargetBlock("METHODS" + this.methodCount);
+      this.methods.push(inputBlock);
+      this.methodCount++;
+      this.appendStatementInput("METHODS" + this.methodCount).setCheck([
+        "class_function_noreturn",
+        "class_function_return"
+      ]);
+    }
+    Blockly.Class.mutateCallers(this);
+    this.changeScope();
   },
   changeScope: function() {
     var attributeCount = 0;
@@ -238,14 +255,10 @@ Blockly.Blocks["class_class"] = {
     return this.getFieldValue("NAME");
   },
   getStatement: function() {
-    return this.getInputTargetBlock("METHODS");
+    return this.methods;
   },
   getConstructor: function() {
     return this.getInputTargetBlock("CONSTRUCTOR");
-  },
-  onchange: function() {
-    Blockly.Class.mutateCallers(this);
-    this.changeScope();
   },
   callType_: "class"
 };
@@ -296,7 +309,7 @@ Blockly.Blocks["class_constructor"] = {
 
 Blockly.Blocks["class_function_return"] = {
   init: function() {
-    var nameField = new Blockly.FieldTextInput("", Blockly.Procedures.rename);
+    var nameField = new Blockly.FieldTextInput("", Blockly.Class.renameMethod);
     nameField.setSpellcheck(false);
     this.appendDummyInput()
       .appendField("Methode")
@@ -314,7 +327,7 @@ Blockly.Blocks["class_function_return"] = {
     ) {
       this.setCommentText(Blockly.Msg["PROCEDURES_DEFRETURN_COMMENT"]);
     }
-    this.setNextStatement(true, ["class_function_noreturn", "class_function_return"]);
+    this.setNextStatement(false);
     this.setPreviousStatement(true, ["class_function_noreturn", "class_function_return"]);
     this.setColour(Blockly.Msg["PROCEDURES_HUE"]);
     this.setTooltip(Blockly.Msg["PROCEDURES_DEFRETURN_TOOLTIP"]);
@@ -344,7 +357,7 @@ Blockly.Blocks["class_function_return"] = {
 
 Blockly.Blocks["class_function_noreturn"] = {
   init: function() {
-    var nameField = new Blockly.FieldTextInput("", Blockly.Procedures.rename);
+    var nameField = new Blockly.FieldTextInput("", Blockly.Class.renameMethod);
     nameField.setSpellcheck(false);
     this.appendDummyInput()
       .appendField("Methode")
@@ -359,7 +372,7 @@ Blockly.Blocks["class_function_noreturn"] = {
     ) {
       this.setCommentText(Blockly.Msg["PROCEDURES_DEFNORETURN_COMMENT"]);
     }
-    this.setNextStatement(true, ["class_function_noreturn", "class_function_return"]);
+    this.setNextStatement(false);
     this.setPreviousStatement(true, ["class_function_noreturn", "class_function_return"]);
     this.setColour(Blockly.Msg["PROCEDURES_HUE"]);
     this.setTooltip(Blockly.Msg["PROCEDURES_DEFNORETURN_TOOLTIP"]);
