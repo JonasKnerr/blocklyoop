@@ -13,12 +13,12 @@ Blockly.Blocks["class_get_instance"] = {
     this.setOutput(true, this.getFieldValue("NAME"));
     this.setTooltip("");
     this.setHelpUrl("");
+    this.initColour();
   },
   initColour: function() {
-    if (!this.isInFlyout) {
-      var classBlock = Blockly.Class.getClassByName(this.workspace, this.getFieldValue("NAME"));
-      console.log(this.getFieldValue("NAME"));
-      console.log(classBlock);
+    let className = this.inputList[0].fieldRow[1].text_;
+    var classBlock = Blockly.Class.getClassByName(Blockly.getMainWorkspace(), className);
+    if (classBlock) {
       this.setColour(classBlock.getColour());
     }
   },
@@ -79,215 +79,6 @@ Blockly.Blocks["class_get_instance"] = {
     this.initColour();
   },
   defType_: "class"
-};
-
-/**
- *TODO Block for a instance of a specific class
- */
-Blockly.Blocks["class_instance"] = {
-  init: function() {
-    this.appendDummyInput().appendField("Klasse", "CLASS");
-    this.appendDummyInput()
-      .appendField("", "INSTANCE")
-      .appendField(".", "POINT");
-    this.methods = [];
-    this.classVariables = [];
-    this.args = 0;
-    this.setInputsInline(true);
-    this.setColour(20);
-    this.setTooltip("");
-    this.setHelpUrl("");
-  },
-  getInstanceName: function() {
-    return this.getFieldValue("INSTANCE");
-  },
-  getClassName: function() {
-    return this.getFieldValue("CLASS");
-  },
-  /**
-   * Renames the classname of the instance
-   */
-  renameClass: function(oldName, newName) {
-    if (Blockly.Names.equals(oldName, this.getClassName())) {
-      this.setFieldValue(newName, "CLASS");
-    }
-  },
-  /**
-   * Renames the instancename of the instance
-   */
-  renameInstance: function(oldName, newName) {
-    if (Blockly.Names.equals(oldName, this.getInstanceName())) {
-      this.setFieldValue(newName, "INSTANCE");
-    }
-  },
-  update: function(oldName, legalName) {
-    this.getDropDown(oldName, legalName);
-  },
-  /**
-   * Create XML to represent the argumens and names
-   */
-  mutationToDom: function() {
-    var container = document.createElement("mutation");
-    container.setAttribute("name", this.getInstanceName());
-    container.setAttribute("class", this.getClassName());
-    return container;
-  },
-  /**
-   *Parse XML to restore the arguments and names
-   */
-  domToMutation: function(xmlElement) {
-    var name = xmlElement.getAttribute("name");
-    this.renameInstance(this.getInstanceName(), name);
-    var className = xmlElement.getAttribute("class");
-    this.renameClass(this.getClassName(), className);
-  },
-  /**
-   * Intialize a dropdown with all methods for a class
-   */
-  getDropDown: function(oldName, newName) {
-    if (!this.isInFlyout) {
-      var methods = Blockly.Class.getMethods(Blockly.getMainWorkspace(), this.getClassName());
-      var classVariables =
-        Blockly.Class.getClassVariables(Blockly.getMainWorkspace(), this.getClassName()) || [];
-      if (
-        this.methods.length != methods.length ||
-        oldName ||
-        this.classVariables.length != classVariables.length
-      ) {
-        //remove previous Dropdown
-        if (this.getInput("Data")) {
-          this.removeInput("Data");
-        }
-        this.methods = methods;
-        this.classVariables = classVariables;
-
-        if (this.methods.length != 0 || this.classVariables.length != 0) {
-          var options = [];
-          //make array of method names, if a mehtod gets renamed we need to
-          // store the new Value newName
-          var methodNames = methods.map(method => {
-            if (method.getFieldValue("NAME") == oldName) return newName;
-            return method.getFieldValue("NAME");
-          });
-          if (this.curValue == oldName) {
-            this.curValue = newName;
-          }
-
-          //remove current value if block is not in the class anymore
-          if (
-            !methodNames.includes(this.curValue) &&
-            !this.classVariables.includes(this.curValue)
-          ) {
-            this.curValue = "";
-            this.typeOfValue = "";
-          }
-          if (this.curValue) {
-            if (this.classVariables.includes(this.curValue)) {
-              this.typeOfValue = "attribute";
-              options.push([this.curValue, this.curValue]);
-            } else {
-              this.typeOfValue = "method";
-              options.push([this.curValue + "()", this.curValue]);
-            }
-          }
-          for (var i = 0; i < this.classVariables.length; i++) {
-            if (classVariables[i] == this.curValue && this.typeOfValue == "attribute") continue;
-            options.push([classVariables[i], classVariables[i]]);
-          }
-          for (var i = 0; i < methodNames.length; i++) {
-            if (methodNames[i] == this.curValue && this.typeOfValue == "method") continue;
-            options.push([
-              this.methods[i].getFieldValue("NAME") + "()",
-              this.methods[i].getFieldValue("NAME")
-            ]);
-          }
-          var dropdown = new Blockly.FieldDropdown(options);
-          this.appendDummyInput("Data").appendField(dropdown, "METHODS");
-        }
-      }
-    }
-  },
-  //returns the actual method
-  getCurrentMethod: function() {
-    return this.curValue;
-  },
-  setType: function(isReturn) {
-    if (isReturn) {
-      //remove Previous and Next Connections before removing the Statement
-      if (this.nextConnection) {
-        if (this.nextConnection.isConnected()) {
-          this.nextConnection.disconnect();
-        }
-      }
-      if (this.previousConnection) {
-        if (this.previousConnection.isConnected()) {
-          this.previousConnection.disconnect();
-        }
-      }
-      this.setNextStatement(false);
-      this.setPreviousStatement(false);
-      this.setOutput(true);
-    } else {
-      this.setOutput(false);
-      this.setNextStatement(true);
-      this.setPreviousStatement(true);
-    }
-  },
-  onchange: function() {
-    var isVar;
-    if (this.classVariables) {
-      isVar = this.classVariables.includes(this.getFieldValue("METHODS"));
-    }
-    if (this.getFieldValue("METHODS") && !this.isInFlyout && !isVar) {
-      this.typeOfValue = "method";
-      var method = this.getFieldValue("METHODS");
-      //check if Method has return value and adjust block
-      var blocks = this.workspace.getAllBlocks();
-      for (var i = 0; i < blocks.length; i++) {
-        if (blocks[i].getProcedureDef) {
-          if (blocks[i].getProcedureDef()[0] == method) {
-            var methodBlock = blocks[i];
-          }
-        }
-      }
-      var isReturn;
-      if (methodBlock) {
-        if (methodBlock.type == "class_function_return") {
-          isReturn = true;
-        } else if (methodBlock.type == "class_function_noreturn") {
-          isReturn = false;
-        }
-        this.setType(isReturn);
-      }
-      this.curValue = method;
-      var args = Blockly.Class.getMethodAttributes(this.workspace, method);
-      if (this.args != args.length) {
-        if (this.args > args.length) {
-          while (this.args > args.length) {
-            this.args--;
-            this.removeInput("ARG" + this.args);
-          }
-        } else {
-          while (this.args < args.length) {
-            this.appendValueInput("ARG" + this.args);
-            //appned Inpute at the end of the Block
-            this.moveInputBefore("ARG" + this.args, null);
-            this.args++;
-          }
-        }
-      }
-    } else {
-      this.typeOfValue = "attribute";
-      this.setType(true);
-
-      var variable_ = this.getFieldValue("METHODS");
-      this.curValue = variable_;
-      while (this.args > 0) {
-        this.args--;
-        this.removeInput("ARG" + this.args);
-      }
-    }
-  }
 };
 
 /**
@@ -492,7 +283,7 @@ Blockly.Blocks["class_constructor"] = {
   decompose: Blockly.Blocks["procedures_defnoreturn"].decompose,
   compose: Blockly.Blocks["procedures_defnoreturn"].compose,
   getVars: Blockly.Blocks["procedures_defnoreturn"].getVars,
-  getProcedureDef: function() {
+  getConstructorDef: function() {
     return ["Constructor", this.arguments_, false];
   },
   getVarModels: Blockly.Blocks["procedures_defnoreturn"].getVarModels,
@@ -500,7 +291,7 @@ Blockly.Blocks["class_constructor"] = {
   updateVarName: Blockly.Blocks["procedures_defnoreturn"].updateVarName,
   displayRenamedVar_: Blockly.Blocks["procedures_defnoreturn"].displayRenamedVar_,
   customContextMenu: Blockly.Blocks["procedures_defnoreturn"].customContextMenu,
-  callType_: "procedures_callreturn"
+  callType_: "class_constructor"
 };
 
 Blockly.Blocks["class_function_return"] = {
@@ -540,7 +331,7 @@ Blockly.Blocks["class_function_return"] = {
   decompose: Blockly.Blocks["procedures_defnoreturn"].decompose,
   compose: Blockly.Blocks["procedures_defnoreturn"].compose,
   getVars: Blockly.Blocks["procedures_defnoreturn"].getVars,
-  getProcedureDef: function() {
+  getMethodDef: function() {
     return [this.getFieldValue("NAME"), this.arguments_, true];
   },
   getVarModels: Blockly.Blocks["procedures_defnoreturn"].getVarModels,
@@ -548,7 +339,7 @@ Blockly.Blocks["class_function_return"] = {
   updateVarName: Blockly.Blocks["procedures_defnoreturn"].updateVarName,
   displayRenamedVar_: Blockly.Blocks["procedures_defnoreturn"].displayRenamedVar_,
   customContextMenu: Blockly.Blocks["procedures_defnoreturn"].customContextMenu,
-  callType_: "procedures_callreturn"
+  callType_: "class_function_return"
 };
 
 Blockly.Blocks["class_function_noreturn"] = {
@@ -585,7 +376,7 @@ Blockly.Blocks["class_function_noreturn"] = {
   decompose: Blockly.Blocks["procedures_defnoreturn"].decompose,
   compose: Blockly.Blocks["procedures_defnoreturn"].compose,
   getVars: Blockly.Blocks["procedures_defnoreturn"].getVars,
-  getProcedureDef: function() {
+  getMethodDef: function() {
     return [this.getFieldValue("NAME"), this.arguments_, false];
   },
   getVarModels: Blockly.Blocks["procedures_defnoreturn"].getVarModels,
@@ -593,7 +384,7 @@ Blockly.Blocks["class_function_noreturn"] = {
   updateVarName: Blockly.Blocks["procedures_defnoreturn"].updateVarName,
   displayRenamedVar_: Blockly.Blocks["procedures_defnoreturn"].displayRenamedVar_,
   customContextMenu: Blockly.Blocks["procedures_defnoreturn"].customContextMenu,
-  callType_: "procedures_callreturn"
+  callType_: "class_function_noreturn"
 };
 Blockly.Blocks["class_attribute"] = {
   init: function() {

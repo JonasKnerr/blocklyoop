@@ -283,29 +283,6 @@ Blockly.Class.getMethodAttributes = function(workspace, methodName) {
 Blockly.Class.flyoutCategory = function(workspace) {
   var xmlList = [];
 
-  // if (Blockly.Blocks["enjoy"]) {
-  //   var block = Blockly.Xml.utils.createElement("block");
-  //   block.setAttribute("type", "enjoy");
-  //   block.setAttribute("gap", 16);
-  //   var nameField = Blockly.Xml.utils.createElement("field");
-  //   nameField.setAttribute("name", "NAME");
-  //   /**TODO: Blockly Message einfügen*/
-  //   nameField.appendChild(Blockly.Xml.utils.createTextNode("Klasse"));
-  //   block.appendChild(nameField);
-  //   xmlList.push(block);
-  // }
-  //
-  // if (Blockly.Blocks["while_pres"]) {
-  //   var block = Blockly.Xml.utils.createElement("block");
-  //   block.setAttribute("type", "while_pres");
-  //   block.setAttribute("gap", 16);
-  //   var nameField = Blockly.Xml.utils.createElement("field");
-  //   nameField.setAttribute("name", "NAME");
-  //   /**TODO: Blockly Message einfügen*/
-  //   nameField.appendChild(Blockly.Xml.utils.createTextNode("Klasse"));
-  //   block.appendChild(nameField);
-  //   xmlList.push(block);
-  // }
   if (Blockly.Blocks["class_class"]) {
     var block = Blockly.Xml.utils.createElement("block");
     block.setAttribute("type", "class_class");
@@ -365,22 +342,6 @@ Blockly.Class.flyoutCategory = function(workspace) {
       xmlList.push(block);
     }
   }
-
-  // function populateInstances(instanceList) {
-  //   for (var i = 0; i < instanceList.length; i++) {
-  //     //block for next and prev instances
-  //     var name = instanceList[i][1];
-  //     var className = instanceList[i][0];
-  //     var block = Blockly.Xml.utils.createElement("block");
-  //     block.setAttribute("type", "class_instance");
-  //     block.setAttribute("gap", 16);
-  //     var mutation = Blockly.Xml.utils.createElement("mutation");
-  //     mutation.setAttribute("name", name);
-  //     mutation.setAttribute("class", className);
-  //     block.appendChild(mutation);
-  //     xmlList.push(block);
-  //   }
-  //}
 
   var classes = Blockly.Class.allUsedClasses(workspace);
   populateClasses(classes);

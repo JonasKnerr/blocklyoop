@@ -174,7 +174,6 @@ Blockly.Variables.flyoutCategory = function(workspace) {
   for (var i = 0; i < classes.length; i++) {
     let className = classes[i];
 
-    console.log(className);
     var objectButton = document.createElement("button");
     var buttonString = "Create " + className + " variable...";
     objectButton.setAttribute("text", buttonString);
@@ -188,7 +187,6 @@ Blockly.Variables.flyoutCategory = function(workspace) {
         className
       );
     });
-    console.log(objectButton);
     xmlList.push(objectButton);
   }
   var blockList = Blockly.Variables.flyoutCategoryBlocks(workspace);
@@ -268,7 +266,7 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
         var blockText =
           "<xml>" +
           '<block type="variables_set" gap="' +
-          20 +
+          8 +
           '">' +
           Blockly.Variables.generateVariableFieldXmlString(firstVariable) +
           "</block>" +
@@ -277,32 +275,41 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
         xmlList.push(block);
       }
 
+      if (Blockly.Blocks["variables_get"]) {
+        var blockText =
+          "<xml>" +
+          '<block type="variables_get" gap="8">' +
+          Blockly.Variables.generateVariableFieldXmlString(firstVariable) +
+          "</block>" +
+          "</xml>";
+        var block = Blockly.Xml.textToDom(blockText).firstChild;
+        xmlList.push(block);
+      }
+
       for (var j = 0, variable; (variable = variableList[j]); j++) {
-        if (Blockly.Blocks["variables_get"]) {
-          var blockText =
-            "<xml>" +
-            '<block type="variables_get" gap="8">' +
-            Blockly.Variables.generateVariableFieldXmlString(variable) +
-            "</block>" +
-            "</xml>";
-          var block = Blockly.Xml.textToDom(blockText).firstChild;
-          xmlList.push(block);
+        var gap = 8;
+        console.log(j);
+        console.log(variableList.length);
+        if (j == variableList.length - 1) {
+          gap = 20;
         }
 
         if (Blockly.Blocks["object_variables_get"]) {
           var blockText =
             "<xml>" +
-            '<block type="object_variables_get" gap="20">' +
+            '<block type="object_variables_get" gap="' +
+            gap +
+            '">' +
             Blockly.Variables.generateVariableFieldXmlString(variable) +
             "</block>" +
             "</xml>";
           var block = Blockly.Xml.textToDom(blockText).firstChild;
-          console.log(block);
           xmlList.push(block);
         }
       }
     }
   }
+  console.log(xmlList);
   return xmlList;
 };
 
@@ -380,7 +387,6 @@ Blockly.Variables.createVariableButtonHandler = function(
   opt_obj
 ) {
   var type = opt_type || "";
-  console.log(opt_obj);
   if (!opt_obj) {
     var opt_obj = false;
   }
@@ -501,7 +507,6 @@ Blockly.Variables.renameVariable = function(
  */
 Blockly.Variables.promptName = function(promptText, defaultText, opt_obj, callback) {
   Blockly.prompt(promptText, defaultText, opt_obj, function(newVar) {
-    console.log(opt_obj);
     // Merge runs of whitespace.  Strip leading and trailing whitespace.
     // Beyond this, all names are legal.
     if (newVar[0]) {

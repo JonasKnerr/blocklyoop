@@ -100,8 +100,17 @@ Blockly.Blocks["variables_set"] = {
     this.jsonInit(variable_set_json);
     this.setInit = false;
     this.varType = "";
+    this.colourIsSet = false;
   },
   onchange: function() {
+    if (!this.colourIsSet) {
+      var varModel = this.inputList[0].fieldRow[1].getVariable();
+      var classBlock = Blockly.Class.getClassByName(Blockly.getMainWorkspace(), varModel.type);
+      if (classBlock) {
+        this.setColour(classBlock.getColour());
+        this.colourIsSet = true;
+      }
+    }
     if (!this.isInFlyout) {
       var id = this.getFieldValue("VAR");
       var variableModel = this.workspace.getVariableById(id);
@@ -130,8 +139,17 @@ Blockly.Blocks["variables_get"] = {
     this.jsonInit(variable_get_json);
     this.varType = "";
     this.varTypeIsSet = false;
+    this.colourIsSet = false;
   },
   onchange: function() {
+    if (!this.colourIsSet) {
+      var varModel = this.inputList[0].fieldRow[0].getVariable();
+      var classBlock = Blockly.Class.getClassByName(Blockly.getMainWorkspace(), varModel.type);
+      if (classBlock) {
+        this.setColour(classBlock.getColour());
+        this.colourIsSet = true;
+      }
+    }
     if (!this.isInFlyout && !this.varTypeIsSet) {
       var id = this.getFieldValue("VAR");
       var variableModel = this.workspace.getVariableById(id);
@@ -145,6 +163,7 @@ Blockly.Blocks["variables_get"] = {
     }
   }
 };
+
 Blockly.Blocks["object_variables_get"] = {
   init: function() {
     this.jsonInit(object_variable_get_json);
@@ -153,18 +172,17 @@ Blockly.Blocks["object_variables_get"] = {
     this.methods = [];
     this.classVariables = [];
     this.args = 0;
-    this.start();
-  },
-  start: function() {
-    var id = this.getFieldValue("VAR");
-    var variableModel = Blockly.getMainWorkspace().getVariableById(id);
-    console.log(Blockly.getMainWorkspace().getAllVariables());
-    console.log(this.workspace.getAllVariables());
-    console.log(id);
-    console.log(this);
-    this.setColour(20);
+    this.colourIsSet = false;
   },
   onchange: function() {
+    if (!this.colourIsSet) {
+      var varModel = this.inputList[0].fieldRow[0].getVariable();
+      var classBlock = Blockly.Class.getClassByName(Blockly.getMainWorkspace(), varModel.type);
+      if (classBlock) {
+        this.setColour(classBlock.getColour());
+        this.colourIsSet = true;
+      }
+    }
     if (!this.isInFlyout) {
       if (!this.varTypeIsSet) {
         var id = this.getFieldValue("VAR");
