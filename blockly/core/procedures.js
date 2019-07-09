@@ -285,8 +285,17 @@ Blockly.Procedures.getCallers = function(name, workspace) {
  * @param {!Blockly.Block} defBlock Procedure definition block.
  */
 Blockly.Procedures.mutateCallers = function(defBlock) {
+  if (
+    defBlock.callType_ == "procedures_callnoreturn" ||
+    defBlock.callType_ == "procedures_callreturn"
+  ) {
+    var name = defBlock.getProcedureDef()[0];
+  } else if (defBlock.callType_ == "class_constructor") {
+    var name = defBlock.getConstructorDef()[0];
+  } else {
+    var name = defBlock.getMethodDef()[0];
+  }
   var oldRecordUndo = Blockly.Events.recordUndo;
-  var name = defBlock.getProcedureDef()[0];
   var xmlElement = defBlock.mutationToDom(true);
   var callers = Blockly.Procedures.getCallers(name, defBlock.workspace);
   for (var i = 0, caller; (caller = callers[i]); i++) {

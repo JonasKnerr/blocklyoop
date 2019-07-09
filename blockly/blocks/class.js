@@ -9,7 +9,7 @@ Blockly.Blocks["class_get_instance"] = {
       .appendField("new")
       .appendField(this.id, "NAME");
     this.args = 0;
-    this.argBlocks = [];
+    this.argNames = [];
     this.setOutput(true, this.getFieldValue("NAME"));
     this.setTooltip("");
     this.setHelpUrl("");
@@ -36,6 +36,8 @@ Blockly.Blocks["class_get_instance"] = {
     return this.constr;
   },
   onchange: function() {
+    if (!this.getInputsInline()) {
+    }
     this.changeOutput(this.getFieldValue("NAME"));
   },
   /*
@@ -53,10 +55,18 @@ Blockly.Blocks["class_get_instance"] = {
             this.removeInput("ARG" + this.args);
           }
         } else {
-          this.appendValueInput("ARG" + this.args);
+          this.appendValueInput("ARG" + this.args).appendField(args[this.args]);
           this.args++;
         }
       }
+      var count = Blockly.Class.arraysEqual(this.argNames, args);
+      if (typeof count == "number") {
+        this.removeInput("ARG" + count);
+        this.appendValueInput("ARG" + count).appendField(args[count]);
+        var countInc = count + 1;
+        if (this.getInput("ARG" + countInc)) this.moveInputBefore("ARG" + count, "ARG" + countInc);
+      }
+      this.argNames = args;
     }
   },
   /**
@@ -152,7 +162,6 @@ Blockly.Blocks["class_class"] = {
     topBlock.initSvg();
 
     //set field according to constructor
-    console.log(topBlock);
     topBlock.setFieldValue(this.hasConstr ? "TRUE" : "FALSE", "CONSTR");
 
     var connection = topBlock.getInput("STACK").connection;
@@ -311,10 +320,7 @@ Blockly.Blocks["class_function_return"] = {
   init: function() {
     var nameField = new Blockly.FieldTextInput("", Blockly.Class.renameMethod);
     nameField.setSpellcheck(false);
-    this.appendDummyInput()
-      .appendField("Methode")
-      .appendField(nameField, "NAME")
-      .appendField("", "PARAMS");
+    this.setInput(nameField);
     this.appendValueInput("RETURN")
       .setAlign(Blockly.ALIGN_RIGHT)
       .appendField(Blockly.Msg["PROCEDURES_DEFRETURN_RETURN"]);
@@ -336,6 +342,18 @@ Blockly.Blocks["class_function_return"] = {
     this.argumentVarModels_ = [];
     this.setStatements_(true);
     this.statementConnection_ = null;
+  },
+  setInput: function(nameField) {
+    if (this.isInFlyout) {
+      this.appendDummyInput()
+        .appendField("Methode")
+        .appendField(nameField, "NAME")
+        .appendField("", "PARAMS");
+    } else {
+      this.appendDummyInput()
+        .appendField(nameField, "NAME")
+        .appendField("", "PARAMS");
+    }
   },
   setStatements_: Blockly.Blocks["procedures_defnoreturn"].setStatements_,
   updateParams_: Blockly.Blocks["procedures_defnoreturn"].updateParams_,
@@ -359,10 +377,7 @@ Blockly.Blocks["class_function_noreturn"] = {
   init: function() {
     var nameField = new Blockly.FieldTextInput("", Blockly.Class.renameMethod);
     nameField.setSpellcheck(false);
-    this.appendDummyInput()
-      .appendField("Methode")
-      .appendField(nameField, "NAME")
-      .appendField("", "PARAMS");
+    this.setInput(nameField);
     this.setMutator(new Blockly.Mutator(["procedures_mutatorarg"]));
     if (
       (this.workspace.options.comments ||
@@ -382,6 +397,7 @@ Blockly.Blocks["class_function_noreturn"] = {
     this.setStatements_(true);
     this.statementConnection_ = null;
   },
+  setInput: Blockly.Blocks["class_function_return"].setInput,
   setStatements_: Blockly.Blocks["procedures_defnoreturn"].setStatements_,
   updateParams_: Blockly.Blocks["procedures_defnoreturn"].updateParams_,
   mutationToDom: Blockly.Blocks["procedures_defnoreturn"].mutationToDom,
@@ -412,7 +428,6 @@ Blockly.Blocks["class_attribute"] = {
     this.contextMenu = false;
   },
   initColour: function() {
-    console.log(this);
     if (this.mutatorParentBlock) {
       var currentBlock = this.mutatorParentBlock;
       var className = currentBlock.getClassDef();
@@ -436,7 +451,6 @@ Blockly.Blocks["class_mutator"] = {
     this.contextMenu = false;
   },
   initColour: function() {
-    console.log(this);
     var currentBlock = this.mutatorParentBlock;
     var className = currentBlock.getClassDef();
     var classBlock = Blockly.Class.getClassByName(currentBlock.workspace, className);

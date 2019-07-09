@@ -26,6 +26,15 @@ Blockly.Class.colour = function() {
   return colour;
 };
 /*
+ *Checks if two arrays are equal and returns position of firts unequal item
+ */
+Blockly.Class.arraysEqual = function(arr1, arr2) {
+  for (var i = arr1.length; i--; ) {
+    if (arr1[i] !== arr2[i]) return i;
+  }
+  return true;
+};
+/*
  * Return a class with a specific name
  */
 Blockly.Class.getClassByName = function(workspace, className) {
