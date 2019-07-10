@@ -104,10 +104,10 @@ Blockly.Blocks["class_class"] = {
       .appendField("Klasse")
       .appendField(nameField, "NAME");
     this.appendDummyInput("METHODS").appendField("Methoden");
-    this.appendStatementInput("METHODS0").setCheck([
-      "class_function_noreturn",
-      "class_function_return"
-    ]);
+    // this.appendStatementInput("METHODS0").setCheck([
+    //   "class_function_noreturn",
+    //   "class_function_return"
+    // ]);
     this.setColour(Blockly.Class.colour());
     this.setConstructor(true);
     this.setMutator(new Blockly.Mutator(["class_attribute"], this));
@@ -120,7 +120,7 @@ Blockly.Blocks["class_class"] = {
     this.setTooltip("");
     this.setHelpUrl("");
   },
-  onchange: function() {
+  onchange: function(event) {
     if (!this.isInFlyout) {
       var counter = 0;
       var removed;
@@ -144,19 +144,16 @@ Blockly.Blocks["class_class"] = {
       }
 
       if (removed) {
-        console.log("removed");
         this.appendStatementInput("METHODS" + removed).setCheck([
           "class_function_noreturn",
           "class_function_return"
         ]);
       } else if (!this.getInput("METHODS0")) {
-        console.log("METHODS0");
         this.appendStatementInput("METHODS0").setCheck([
           "class_function_noreturn",
           "class_function_return"
         ]);
       } else if (!this.getInput("METHODS" + counter)) {
-        console.log("METHODSCOUNT: " + counter);
         this.appendStatementInput("METHODS" + counter).setCheck([
           "class_function_noreturn",
           "class_function_return"

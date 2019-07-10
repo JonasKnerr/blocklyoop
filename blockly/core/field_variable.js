@@ -413,7 +413,6 @@ Blockly.FieldVariable.dropdownCreate = function() {
       }
     }
   }
-  console.log(options);
   this.options = options;
   if (type != "") {
     options.push(["Change Class", Blockly.RENAME_CLASS_ID]);
@@ -423,34 +422,6 @@ Blockly.FieldVariable.dropdownCreate = function() {
     options.push([Blockly.Msg["DELETE_VARIABLE"].replace("%1", name), Blockly.DELETE_VARIABLE_ID]);
   }
 
-  //TODO: try to get the types going again
-  // var variableModelList = [];
-  // if (workspace) {
-  //   var classes = Blockly.Class.allUsedClasses(workspace);
-  //   var variableTypes = this.getVariableTypes_();
-  //   var variableScopes = this.getVariableScopes_();
-  //   console.log(classes);
-  //   console.log(variableScopes);
-  //   // Get a copy of the list, so that adding rename and new variable options
-  //   // doesn't modify the workspace's list.
-  //   for (var i = 0; i < variableTypes.length; i++) {
-  //     if (classes.includes(variableTypes[0])) continue;
-  //     var variableType = variableTypes[i];
-  //     var variables = workspace.getVariablesOfType(variableType);
-  //     variableModelList = variableModelList.concat(variables);
-  //   }
-  // }
-  // variableModelList.sort(Blockly.VariableModel.compareByName);
-  //
-  // var options = [];
-  // for (var i = 0; i < variableModelList.length; i++) {
-  //   // Set the UUID as the internal representation of the variable.
-  //   options[i] = [variableModelList[i].name, variableModelList[i].getId()];
-  // }
-  // options.push([Blockly.Msg["RENAME_VARIABLE"], Blockly.RENAME_VARIABLE_ID]);
-  // if (Blockly.Msg["DELETE_VARIABLE"]) {
-  //   options.push([Blockly.Msg["DELETE_VARIABLE"].replace("%1", name), Blockly.DELETE_VARIABLE_ID]);
-  //
   return options;
 };
 

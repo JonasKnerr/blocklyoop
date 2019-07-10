@@ -318,8 +318,6 @@ Blockly.Blocks["object_variables_get"] = {
       var methods = Blockly.Class.getMethods(Blockly.getMainWorkspace(), this.getClassName());
       var classVariables =
         Blockly.Class.getClassVariables(Blockly.getMainWorkspace(), this.getClassName()) || [];
-      console.log(methods);
-      console.log(this.methods);
       if (
         this.methods.length != methods.length ||
         oldName ||
