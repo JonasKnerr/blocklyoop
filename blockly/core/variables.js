@@ -288,8 +288,6 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
 
       for (var j = 0, variable; (variable = variableList[j]); j++) {
         var gap = 8;
-        console.log(j);
-        console.log(variableList.length);
         if (j == variableList.length - 1) {
           gap = 20;
         }
@@ -309,7 +307,6 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
       }
     }
   }
-  console.log(xmlList);
   return xmlList;
 };
 

@@ -172,6 +172,7 @@ Blockly.Blocks["object_variables_get"] = {
     this.methods = [];
     this.classVariables = [];
     this.args = 0;
+    this.argNames = [];
     this.colourIsSet = false;
   },
   onchange: function() {
@@ -207,8 +208,8 @@ Blockly.Blocks["object_variables_get"] = {
         //check if Method has return value and adjust block
         var blocks = this.workspace.getAllBlocks();
         for (var i = 0; i < blocks.length; i++) {
-          if (blocks[i].getProcedureDef) {
-            if (blocks[i].getProcedureDef()[0] == method) {
+          if (blocks[i].getMethodDef) {
+            if (blocks[i].getMethodDef()[0] == method) {
               var methodBlock = blocks[i];
             }
           }
@@ -233,13 +234,21 @@ Blockly.Blocks["object_variables_get"] = {
             }
           } else {
             while (this.args < args.length) {
-              this.appendValueInput("ARG" + this.args);
-              //appned Inpute at the end of the Block
+              this.appendValueInput("ARG" + this.args).appendField(args[this.args]);
               this.moveInputBefore("ARG" + this.args, null);
               this.args++;
             }
           }
         }
+        var count = Blockly.Class.arraysEqual(this.argNames, args);
+        if (typeof count == "number") {
+          this.removeInput("ARG" + count);
+          this.appendValueInput("ARG" + count).appendField(args[count]);
+          var countInc = count + 1;
+          if (this.getInput("ARG" + countInc))
+            this.moveInputBefore("ARG" + count, "ARG" + countInc);
+        }
+        this.argNames = args;
       } else {
         this.typeOfValue = "attribute";
         this.setType(true);
@@ -305,110 +314,73 @@ Blockly.Blocks["object_variables_get"] = {
     }
   },
   getDropDown: function(oldName, newName) {
-    var methods = Blockly.Class.getMethods(Blockly.getMainWorkspace(), this.getClassName());
-    var classVariables =
-      Blockly.Class.getClassVariables(Blockly.getMainWorkspace(), this.getClassName()) || [];
-    if (
-      this.methods.length != methods.length ||
-      oldName ||
-      this.classVariables.length != classVariables.length
-    ) {
-      //remove previous Dropdown
-      if (this.getInput("Data")) {
-        this.removeInput("Data");
-      }
-      this.methods = methods;
-      this.classVariables = classVariables;
-
-      if (this.methods.length != 0 || this.classVariables.length != 0) {
-        var options = [];
-
-        //make array of method names, if a mehtod gets renamed we need to
-        // store the new Value newName
-        var methodNames = methods.map(method => {
-          if (method.getFieldValue("NAME") == oldName) return newName;
-          return method.getFieldValue("NAME");
-        });
-        if (this.curValue == oldName) {
-          this.curValue = newName;
+    if (!this.isInFlyout) {
+      var methods = Blockly.Class.getMethods(Blockly.getMainWorkspace(), this.getClassName());
+      var classVariables =
+        Blockly.Class.getClassVariables(Blockly.getMainWorkspace(), this.getClassName()) || [];
+      console.log(methods);
+      console.log(this.methods);
+      if (
+        this.methods.length != methods.length ||
+        oldName ||
+        this.classVariables.length != classVariables.length
+      ) {
+        console.log(methods);
+        //remove previous Dropdown
+        if (this.getInput("Data")) {
+          this.removeInput("Data");
         }
+        this.methods = methods;
+        this.classVariables = classVariables;
 
-        //remove current value if block is not in the class anymore
-        if (!methodNames.includes(this.curValue) && !this.classVariables.includes(this.curValue)) {
-          this.curValue = "";
-          this.typeOfValue = "";
-        }
-        if (this.curValue) {
-          if (this.classVariables.includes(this.curValue)) {
-            this.typeOfValue = "attribute";
-            options.push([this.curValue, this.curValue]);
-          } else {
-            this.typeOfValue = "method";
-            options.push([this.curValue + "()", this.curValue]);
+        if (this.methods.length != 0 || this.classVariables.length != 0) {
+          var options = [];
+
+          //make array of method names, if a mehtod gets renamed we need to
+          // store the new Value newName
+          var methodNames = methods.map(method => {
+            if (method.getFieldValue("NAME") == oldName) return newName;
+            return method.getFieldValue("NAME");
+          });
+          if (this.curValue == oldName) {
+            this.curValue = newName;
           }
+
+          //remove current value if block is not in the class anymore
+          if (
+            !methodNames.includes(this.curValue) &&
+            !this.classVariables.includes(this.curValue)
+          ) {
+            this.curValue = "";
+            this.typeOfValue = "";
+          }
+          if (this.curValue) {
+            if (this.classVariables.includes(this.curValue)) {
+              this.typeOfValue = "attribute";
+              options.push([this.curValue, this.curValue]);
+            } else {
+              this.typeOfValue = "method";
+              options.push([this.curValue + "()", this.curValue]);
+            }
+          }
+          for (var i = 0; i < this.classVariables.length; i++) {
+            if (classVariables[i] == this.curValue && this.typeOfValue == "attribute") continue;
+            options.push([classVariables[i], classVariables[i]]);
+          }
+          for (var i = 0; i < methodNames.length; i++) {
+            if (methodNames[i] == this.curValue && this.typeOfValue == "method") continue;
+            options.push([
+              this.methods[i].getFieldValue("NAME") + "()",
+              this.methods[i].getFieldValue("NAME")
+            ]);
+          }
+          var dropdown = new Blockly.FieldDropdown(options);
+          this.appendDummyInput("Data").appendField(dropdown, "METHODS");
         }
-        for (var i = 0; i < this.classVariables.length; i++) {
-          if (classVariables[i] == this.curValue && this.typeOfValue == "attribute") continue;
-          options.push([classVariables[i], classVariables[i]]);
-        }
-        for (var i = 0; i < methodNames.length; i++) {
-          if (methodNames[i] == this.curValue && this.typeOfValue == "method") continue;
-          options.push([
-            this.methods[i].getFieldValue("NAME") + "()",
-            this.methods[i].getFieldValue("NAME")
-          ]);
-        }
-        var dropdown = new Blockly.FieldDropdown(options);
-        this.appendDummyInput("Data").appendField(dropdown, "METHODS");
       }
     }
   }
 };
-
-// Blockly.defineBlocksWithJsonArray([
-//   // BEGIN JSON EXTRACT
-//   // Block for variable getter.
-//   {
-//     type: "variables_get",
-//     message0: "%1",
-//     args0: [
-//       {
-//         type: "field_variable",
-//         name: "VAR",
-//         variable: "%{BKY_VARIABLES_DEFAULT_NAME}"
-//       }
-//     ],
-//     output: null,
-//     variable_scope: "global",
-//     colour: "%{BKY_VARIABLES_HUE}",
-//     helpUrl: "%{BKY_VARIABLES_GET_HELPURL}",
-//     tooltip: "%{BKY_VARIABLES_GET_TOOLTIP}",
-//     extensions: ["contextMenu_variableSetterGetter"]
-//   },
-//   // Block for variable setter.
-//   {
-//     type: "variables_set",
-//     message0: "%{BKY_VARIABLES_SET}",
-//     args0: [
-//       {
-//         type: "field_variable",
-//         name: "VAR",
-//         variable: "%{BKY_VARIABLES_DEFAULT_NAME}"
-//       },
-//       {
-//         type: "input_value",
-//         name: "VALUE"
-//       }
-//     ],
-//     variable_scope: "global",
-//     previousStatement: null,
-//     nextStatement: null,
-//     colour: "%{BKY_VARIABLES_HUE}",
-//     tooltip: "%{BKY_VARIABLES_SET_TOOLTIP}",
-//     helpUrl: "%{BKY_VARIABLES_SET_HELPURL}",
-//     extensions: ["contextMenu_variableSetterGetter"]
-//   }
-// ]); // END JSON EXTRACT (Do not delete this comment.)
 
 /**
  * Mixin to add context menu items to create getter/setter blocks for this

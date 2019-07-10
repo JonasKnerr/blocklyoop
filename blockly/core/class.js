@@ -29,6 +29,7 @@ Blockly.Class.colour = function() {
  *Checks if two arrays are equal and returns position of firts unequal item
  */
 Blockly.Class.arraysEqual = function(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
   for (var i = arr1.length; i--; ) {
     if (arr1[i] !== arr2[i]) return i;
   }
@@ -263,10 +264,10 @@ Blockly.Class.getConstructor = function(workspace, className) {
 Blockly.Class.getMethodAttributes = function(workspace, methodName) {
   var blocks = workspace.getAllBlocks(false);
   for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getProcedureDef) {
-      if (blocks[i].getProcedureDef()[0] == methodName) {
+    if (blocks[i].getMethodDef) {
+      if (blocks[i].getMethodDef()[0] == methodName) {
         //getProcedureDef()[1] is a array with all arguments_
-        return blocks[i].getProcedureDef()[1];
+        return blocks[i].getMethodDef()[1];
       }
     }
   }

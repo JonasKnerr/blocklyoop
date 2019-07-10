@@ -112,28 +112,60 @@ Blockly.Blocks["class_class"] = {
     this.setConstructor(true);
     this.setMutator(new Blockly.Mutator(["class_attribute"], this));
     this.attributeCount = 0;
-    this.methodCount = 0;
     this.methods = [];
     this.attributeInputs = [];
     this.oldName = "";
     this.hasConstr = true;
     this.statementConnection_ = null;
-    this.methodCount = 0;
     this.setTooltip("");
     this.setHelpUrl("");
   },
   onchange: function() {
-    if (this.getInputTargetBlock("METHODS" + this.methodCount)) {
-      var inputBlock = this.getInputTargetBlock("METHODS" + this.methodCount);
-      this.methods.push(inputBlock);
-      this.methodCount++;
-      this.appendStatementInput("METHODS" + this.methodCount).setCheck([
-        "class_function_noreturn",
-        "class_function_return"
-      ]);
+    if (!this.isInFlyout) {
+      var counter = 0;
+      var removed;
+      var orgBlocks = false;
+      var methods = [];
+      var isRemoved = false;
+
+      while (this.getInput("METHODS" + counter)) {
+        orgBlocks = true;
+        if (!this.getInputTargetBlock("METHODS" + counter)) {
+          this.removeInput("METHODS" + counter);
+          if (!isRemoved) {
+            removed = counter;
+            isRemoved = true;
+          }
+        }
+        if (this.getInputTargetBlock("METHODS" + counter)) {
+          methods.push(this.getInputTargetBlock("METHODS" + counter));
+        }
+        counter++;
+      }
+
+      if (removed) {
+        console.log("removed");
+        this.appendStatementInput("METHODS" + removed).setCheck([
+          "class_function_noreturn",
+          "class_function_return"
+        ]);
+      } else if (!this.getInput("METHODS0")) {
+        console.log("METHODS0");
+        this.appendStatementInput("METHODS0").setCheck([
+          "class_function_noreturn",
+          "class_function_return"
+        ]);
+      } else if (!this.getInput("METHODS" + counter)) {
+        console.log("METHODSCOUNT: " + counter);
+        this.appendStatementInput("METHODS" + counter).setCheck([
+          "class_function_noreturn",
+          "class_function_return"
+        ]);
+      }
+      this.methods = methods;
+      Blockly.Class.mutateCallers(this);
+      this.changeScope();
     }
-    Blockly.Class.mutateCallers(this);
-    this.changeScope();
   },
   changeScope: function() {
     var attributeCount = 0;
@@ -240,7 +272,7 @@ Blockly.Blocks["class_class"] = {
     }
   },
   mutationToDom: function() {
-    if (!this.atrributeCount && !this.methodCount) {
+    if (!this.atrributeCount && !this.methods.length) {
       return null;
     }
     var container = document.createElement("mutation");
