@@ -204,7 +204,6 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
   var variableModelList = workspace.getVariablesOfType("");
   variableModelList.sort(Blockly.VariableModel.compareByName);
   var varTypes = workspace.getVariableTypes();
-
   var xmlList = [];
   if (variableModelList.length > 0) {
     var firstVariable = variableModelList[0];

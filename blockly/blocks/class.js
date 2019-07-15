@@ -3,6 +3,7 @@ goog.provide("Blockly.Constants.Class");
 goog.require("Blockly.Blocks");
 goog.require("Blockly");
 
+//@Jonas Knerr
 Blockly.Blocks["class_get_instance"] = {
   init: function() {
     this.appendDummyInput()

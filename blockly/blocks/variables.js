@@ -174,6 +174,7 @@ Blockly.Blocks["object_variables_get"] = {
     this.args = 0;
     this.argNames = [];
     this.colourIsSet = false;
+    this.setInputsInline(true);
   },
   onchange: function() {
     if (!this.colourIsSet) {

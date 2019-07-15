@@ -1,42 +1,196 @@
 <xml>
   <variables>
-    <variable type="Klasse" id="udxZ?1-$Y3WlsI1`FkmQ">
+    <variable type="Klasse" id="=q@qZinviskw{e,!BBuS">
+      Stack
+    </variable>
+    <variable type="" id="$#0kriAL@Iy}?J770eT4">
       x
     </variable>
-    <variable type="Klasse" id="-/fzcN}bA`Ax+s8C-UeK">
-      y
+    <variable type="" id="q[u,cuIiI|8YOY3z_zO{">
+      x2
     </variable>
   </variables>
-  <block type="class_class" id="ZVg{GQ?y_tlA!!|XIP|g" x="297" y="58">
+  <block type="class_class" id="{0M;q!C))roDBYkITy!5" x="94" y="8">
+    <mutation attribute="1" />
     <field name="NAME">Klasse</field>
-    <statement name="METHODS">
-      <block type="class_function_noreturn" id=")q,)^iOGKQBDCo,O9gNO">
-        <field name="NAME">Funktion</field>
+    <value name="attribute1">
+      <block type="variables_get" id="dD*Lb%,K(UvH=Vd6;~m0">
+        <field name="VAR" id="$#0kriAL@Iy}?J770eT4" variabletype="">
+          x
+        </field>
+      </block>
+    </value>
+    <statement name="CONSTRUCTOR">
+      <block type="class_constructor" id="taT-aQhCZU,5=dr[N|?j">
         <comment pinned="false" h="80" w="160">
           Describe this function...
         </comment>
+        <statement name="STACK">
+          <block type="variables_set" id="BC%!-o!gTp}G+%YFX/EA">
+            <field name="VAR" id="$#0kriAL@Iy}?J770eT4" variabletype="">
+              x
+            </field>
+            <value name="VALUE">
+              <block type="lists_create_with" id="W|r[~P]v-o{VPnk0aG_t">
+                <mutation items="0" />
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <statement name="METHODS0">
+      <block type="class_function_return" id="s786n7^):WXY97_m^A1p">
+        <mutation statements="false" />
+        <field name="NAME">Pop</field>
+        <comment pinned="false" h="80" w="160">
+          Describe this function...
+        </comment>
+        <value name="RETURN">
+          <block type="lists_getIndex" id="lJ#_69*(7Q$JiS{(RWsZ">
+            <mutation statement="false" at="false" />
+            <field name="MODE">GET_REMOVE</field>
+            <field name="WHERE">LAST</field>
+            <value name="VALUE">
+              <block type="variables_get" id="G-}WZyT5WYlkqY8UKtF:">
+                <field name="VAR" id="$#0kriAL@Iy}?J770eT4" variabletype="">
+                  x
+                </field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+    <statement name="METHODS1">
+      <block type="class_function_noreturn" id="kC:rf@Ck$$`^1[8EA)?Z">
+        <mutation>
+          <arg name="x2" varid="q[u,cuIiI|8YOY3z_zO{" />
+        </mutation>
+        <field name="NAME">Push</field>
+        <comment pinned="false" h="80" w="160">
+          Describe this function...
+        </comment>
+        <statement name="STACK">
+          <block type="lists_setIndex" id="G:yec;Jpvga`11Hu2*3F">
+            <mutation at="true" />
+            <field name="MODE">SET</field>
+            <field name="WHERE">FROM_END</field>
+            <value name="LIST">
+              <block type="variables_get" id="^H;2cbP_M9ZnA+hw[Hif">
+                <field name="VAR" id="$#0kriAL@Iy}?J770eT4" variabletype="">
+                  x
+                </field>
+              </block>
+            </value>
+            <value name="AT">
+              <block type="math_number" id=")Fs4Tg7~z|X}Mn!xR+!7">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+            <value name="TO">
+              <block type="variables_get" id="`a;_I}xgMj.$MFv2WT{K">
+                <field name="VAR" id="q[u,cuIiI|8YOY3z_zO{" variabletype="">
+                  x2
+                </field>
+              </block>
+            </value>
+          </block>
+        </statement>
       </block>
     </statement>
   </block>
-  <block type="variables_set" id="(U6]_4d1xs+@h[g8ZSOv" x="359" y="267">
-    <field name="VAR" id="udxZ?1-$Y3WlsI1`FkmQ" variabletype="Klasse">
-      x
+  <block type="variables_set" id="1%z^;R$E%+21OS{wGJ2o" x="94" y="353">
+    <field name="VAR" id="=q@qZinviskw{e,!BBuS" variabletype="Klasse">
+      Stack
     </field>
     <value name="VALUE">
-      <block type="class_get_instance" id="}qCypmJLduOppaf2.+Qj">
+      <block type="class_get_instance" id="Kd!iy(MK-tQJw$g^eB`T">
         <mutation name="Klasse" />
       </block>
     </value>
     <next>
-      <block type="variables_set" id="2#K_-Z:2i5p`m9pI653A">
-        <field name="VAR" id="-/fzcN}bA`Ax+s8C-UeK" variabletype="Klasse">
-          y
+      <block type="object_variables_get" id="D=z)(n/,i+kSU=1eHh]3" inline="true">
+        <field name="VAR" id="=q@qZinviskw{e,!BBuS" variabletype="Klasse">
+          Stack
         </field>
-        <value name="VALUE">
-          <block type="class_get_instance" id="n^e2gMvw]w^mPB1fnoU5">
-            <mutation name="Klasse" />
+        <field name="METHODS">Push</field>
+        <value name="ARG0">
+          <block type="math_number" id="MPtF=Tx3@!*geq!|W~J8">
+            <field name="NUM">0</field>
           </block>
         </value>
+        <next>
+          <block type="object_variables_get" id="6}NVq`rEL[j?m)%K[yzZ" inline="true">
+            <field name="VAR" id="=q@qZinviskw{e,!BBuS" variabletype="Klasse">
+              Stack
+            </field>
+            <field name="METHODS">Push</field>
+            <value name="ARG0">
+              <block type="math_number" id="?@N}h`PpDRqSBk(SMYyq">
+                <field name="NUM">1</field>
+              </block>
+            </value>
+            <next>
+              <block type="object_variables_get" id="[{F?6L$#i0Ws2YdjSuw{" inline="true">
+                <field name="VAR" id="=q@qZinviskw{e,!BBuS" variabletype="Klasse">
+                  Stack
+                </field>
+                <field name="METHODS">Push</field>
+                <value name="ARG0">
+                  <block type="math_number" id="E_KcqGK72J91PX*M)G(_">
+                    <field name="NUM">2</field>
+                  </block>
+                </value>
+                <next>
+                  <block type="text_print" id="Ss,hhMwj,RtR3hp`Zm6C">
+                    <value name="TEXT">
+                      <shadow type="text" id="kKsvk/`az6H#b%%~mknU">
+                        <field name="TEXT">abc</field>
+                      </shadow>
+                      <block type="object_variables_get" id="ZP@[E`q*yz.Y[}chD1#L">
+                        <field name="VAR" id="=q@qZinviskw{e,!BBuS" variabletype="Klasse">
+                          Stack
+                        </field>
+                        <field name="METHODS">Pop</field>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="text_print" id=";_.t`0|P;1o}q%hD8=};">
+                        <value name="TEXT">
+                          <shadow type="text" id="kKsvk/`az6H#b%%~mknU">
+                            <field name="TEXT">abc</field>
+                          </shadow>
+                          <block type="object_variables_get" id="_A5=0WYd?u_DV$:P+Us;">
+                            <field name="VAR" id="=q@qZinviskw{e,!BBuS" variabletype="Klasse">
+                              Stack
+                            </field>
+                            <field name="METHODS">Pop</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="text_print" id="%T=}ZfqehiaK1]Gi3`26">
+                            <value name="TEXT">
+                              <shadow type="text" id="kKsvk/`az6H#b%%~mknU">
+                                <field name="TEXT">abc</field>
+                              </shadow>
+                              <block type="object_variables_get" id="adeD:mVZdaR3:]HBDIZS">
+                                <field name="VAR" id="=q@qZinviskw{e,!BBuS" variabletype="Klasse">
+                                  Stack
+                                </field>
+                                <field name="METHODS">x</field>
+                              </block>
+                            </value>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
       </block>
     </next>
   </block>
