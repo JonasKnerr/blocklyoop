@@ -254,7 +254,6 @@ Blockly.Variables.flyoutCategoryBlocks = function(workspace) {
   }
   for (var i = 0; i < varTypes.length; i++) {
     if (varTypes[i] == "") continue;
-    var colour = Blockly.Class.getClassByName(workspace, varTypes[i]).getColour();
     var variableList = workspace.getVariablesOfType(varTypes[i]);
     if (variableList.length > 0) {
       //TODO: Add label or something between different blocks

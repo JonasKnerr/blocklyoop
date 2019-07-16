@@ -318,7 +318,7 @@ Blockly.Blocks["class_constructor"] = {
     ) {
       this.setCommentText(Blockly.Msg["PROCEDURES_DEFNORETURN_COMMENT"]);
     }
-    this.setNextStatement(true);
+    this.setNextStatement(false);
     this.setPreviousStatement(true);
     this.setColour(Blockly.Msg["PROCEDURES_HUE"]);
     this.setTooltip(Blockly.Msg["PROCEDURES_DEFNORETURN_TOOLTIP"]);

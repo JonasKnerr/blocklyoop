@@ -312,6 +312,7 @@ Blockly.Blocks["object_variables_get"] = {
   update: function(oldName, legalName) {
     if (this.varTypeIsSet) {
       this.getDropDown(oldName, legalName);
+      this.setInputsInline(this.getInputsInline());
     }
   },
   getDropDown: function(oldName, newName) {
@@ -375,6 +376,9 @@ Blockly.Blocks["object_variables_get"] = {
           }
           var dropdown = new Blockly.FieldDropdown(options);
           this.appendDummyInput("Data").appendField(dropdown, "METHODS");
+          if (this.getInput("ARG0")) {
+            this.moveInputBefore("Data", "ARG0");
+          }
         }
       }
     }
