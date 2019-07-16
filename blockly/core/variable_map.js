@@ -209,7 +209,6 @@ Blockly.VariableMap.prototype.createVariable = function(name, opt_type, opt_id, 
     // Else append the variable to the preexisting list.
     this.variableMap_[opt_type].push(variable);
   }
-
   if (!opt_scope) {
     this.addVariableToScope(name, "global", opt_type);
   } else {

@@ -153,12 +153,6 @@ Blockly.Variables.allDeveloperVariables = function(workspace) {
  * @return {!Array.<!Element>} Array of XML elements.
  */
 Blockly.Variables.flyoutCategory = function(workspace) {
-  var blocks = workspace.getAllBlocks();
-  var classList = [];
-  for (var i = 0; i < blocks.length; i++) {
-    if (blocks[i].getClassDef) classList.push(blocks[i].getClassDef());
-  }
-
   var classes = Blockly.Class.allUsedClasses(workspace);
 
   var xmlList = [];
@@ -391,7 +385,6 @@ Blockly.Variables.createVariableButtonHandler = function(
       text
     ) {
       var varName = text.varName;
-      var className = text.className || "";
       if (varName) {
         var existing = Blockly.Variables.nameUsedWithAnyType_(varName, workspace);
         if (existing) {
@@ -408,7 +401,7 @@ Blockly.Variables.createVariableButtonHandler = function(
         } else {
           // No conflict
           //needs to be adjustet for dynamic typing
-          workspace.createVariable(varName, className, false, opt_scope);
+          workspace.createVariable(varName, opt_type, false, opt_scope);
           if (opt_callback) {
             opt_callback(text);
           }

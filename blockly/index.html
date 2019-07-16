@@ -22,6 +22,7 @@
   <script src="blocks/lists.js"></script>
   <script src="blocks/colour.js"></script>
   <script src="blocks/variables.js"></script>
+  <script src="blocks/variables_dynamic.js"></script>
   <script src="blocks/procedures.js"></script>
   <script src="blocks/class.js"></script>
   <script src="msg/js/en.js"></script>
@@ -732,12 +733,12 @@
 </xml>
 
 <script>
-// var workspace = Blockly.inject("blocklyDiv", {
-//   toolbox: document.getElementById("toolbox-categories-typed-variables")
-// });
 var workspace = Blockly.inject("blocklyDiv", {
-  toolbox: document.getElementById("toolbox-categories")
+  toolbox: document.getElementById("toolbox-categories-typed-variables")
 });
+// var workspace = Blockly.inject("blocklyDiv", {
+//   toolbox: document.getElementById("toolbox-categories")
+// });
 Blockly.Xml.domToWorkspace(document.getElementById("startBlocks"), workspace);
 </script>
 <div>

@@ -38,250 +38,51 @@ goog.require("Blockly");
  * Unused constant for the common HSV hue for all blocks in this category.
  * @deprecated Use Blockly.Msg['VARIABLES_DYNAMIC_HUE']. (2018 April 5)
  */
+
 Blockly.Constants.VariablesDynamic.HUE = 310;
 
-var variable_get_dynamic_json = {
-  message0: "%1",
-  args0: [
-    {
-      type: "field_variable",
-      name: "VAR",
-      variable: "%{BKY_VARIABLES_DEFAULT_NAME}"
-    }
-  ],
-  output: null,
-  colour: "%{BKY_VARIABLES_DYNAMIC_HUE}",
-  helpUrl: "%{BKY_VARIABLES_GET_HELPURL}",
-  tooltip: "%{BKY_VARIABLES_GET_TOOLTIP}",
-  extensions: ["contextMenu_variableDynamicSetterGetter"]
-};
-// Block for variable setter.
-var variables_set_dynamic_json = {
-  type: "variables_set_dynamic",
-  message0: "%{BKY_VARIABLES_SET}",
-  args0: [
-    {
-      type: "field_variable",
-      name: "VAR",
-      variable: "%{BKY_VARIABLES_DEFAULT_NAME}"
-    },
-    {
-      type: "input_value",
-      name: "VALUE"
-    }
-  ],
-  previousStatement: null,
-  nextStatement: null,
-  colour: "%{BKY_VARIABLES_DYNAMIC_HUE}",
-  tooltip: "%{BKY_VARIABLES_SET_TOOLTIP}",
-  helpUrl: "%{BKY_VARIABLES_SET_HELPURL}",
-  extensions: ["contextMenu_variableDynamicSetterGetter"]
-}; // END JSON EXTRACT (Do not delete this comment.)
-
-Blockly.Blocks["variables_get_dynamic"] = {
-  init: function() {
-    this.jsonInit(variable_get_dynamic_json);
-    this.varType = "";
-    this.varTypeIsSet = false;
-    this.methods = [];
-    this.classVariables = [];
-    this.args = 0;
-    this.start();
-  },
-  start: function() {
-    console.log(this);
-  },
-  onchange: function() {
-    console.log("variable_get_dynamic");
-    if (!this.isInFlyout) {
-      if (!this.varTypeIsSet) {
-        var id = this.getFieldValue("VAR");
-        var variableModel = this.workspace.getVariableById(id);
-        var varType = variableModel.type;
-        this.varType = varType;
-        var classBlock = Blockly.Class.getClassByName(this.workspace, varType);
-        if (classBlock) {
-          this.setColour(classBlock.getColour());
-        }
-        if (variableModel.typeSet) this.varTypeIsSet = true;
-        console.log(varType);
+Blockly.defineBlocksWithJsonArray([
+  // BEGIN JSON EXTRACT
+  // Block for variable getter.
+  {
+    type: "variables_get_dynamic",
+    message0: "%1",
+    args0: [
+      {
+        type: "field_variable",
+        name: "VAR",
+        variable: "%{BKY_VARIABLES_DEFAULT_NAME}"
       }
-    }
-    if (this.varType != "" && this.varTypeIsSet) {
-      var isVar;
-      if (this.classVariables) {
-        isVar = this.classVariables.includes(this.getFieldValue("METHODS"));
+    ],
+    output: null,
+    colour: "%{BKY_VARIABLES_DYNAMIC_HUE}",
+    helpUrl: "%{BKY_VARIABLES_GET_HELPURL}",
+    tooltip: "%{BKY_VARIABLES_GET_TOOLTIP}",
+    extensions: ["contextMenu_variableDynamicSetterGetter"]
+  },
+  // Block for variable setter.
+  {
+    type: "variables_set_dynamic",
+    message0: "%{BKY_VARIABLES_SET}",
+    args0: [
+      {
+        type: "field_variable",
+        name: "VAR",
+        variable: "%{BKY_VARIABLES_DEFAULT_NAME}"
+      },
+      {
+        type: "input_value",
+        name: "VALUE"
       }
-      if (this.getFieldValue("METHODS") && !this.isInFlyout && !isVar) {
-        this.typeOfValue = "method";
-        var method = this.getFieldValue("METHODS");
-        //check if Method has return value and adjust block
-        var blocks = this.workspace.getAllBlocks();
-        for (var i = 0; i < blocks.length; i++) {
-          if (blocks[i].getProcedureDef) {
-            if (blocks[i].getProcedureDef()[0] == method) {
-              var methodBlock = blocks[i];
-            }
-          }
-        }
-        var isReturn;
-        if (methodBlock) {
-          if (methodBlock.type == "class_function_return") {
-            isReturn = true;
-          } else if (methodBlock.type == "class_function_noreturn") {
-            isReturn = false;
-          }
-          this.setType(isReturn);
-        }
-        this.curValue = method;
-        var args = Blockly.Class.getMethodAttributes(this.workspace, method);
-        if (this.args != args.length) {
-          if (this.args > args.length) {
-            while (this.args > args.length) {
-              this.args--;
-              this.removeInput("ARG" + this.args);
-            }
-          } else {
-            while (this.args < args.length) {
-              this.appendValueInput("ARG" + this.args);
-              //appned Inpute at the end of the Block
-              this.moveInputBefore("ARG" + this.args, null);
-              this.args++;
-            }
-          }
-        }
-      } else {
-        this.typeOfValue = "attribute";
-        this.setType(true);
-
-        var variable_ = this.getFieldValue("METHODS");
-        this.curValue = variable_;
-        while (this.args > 0) {
-          this.args--;
-          this.removeInput("ARG" + this.args);
-        }
-      }
-    }
-  },
-  setType: function(isReturn) {
-    if (this.varType != "" && this.varTypeIsSet) {
-      if (isReturn) {
-        //remove Previous and Next Connections before removing the Statement
-        if (this.nextConnection) {
-          if (this.nextConnection.isConnected()) {
-            this.nextConnection.disconnect();
-          }
-        }
-        if (this.previousConnection) {
-          if (this.previousConnection.isConnected()) {
-            this.previousConnection.disconnect();
-          }
-        }
-        this.setNextStatement(false);
-        this.setPreviousStatement(false);
-        this.setOutput(true);
-      } else {
-        this.setOutput(false);
-        this.setNextStatement(true);
-        this.setPreviousStatement(true);
-      }
-    }
-  },
-  getInstanceName: function() {
-    if (this.varType != "" && this.varTypeIsSet) {
-      return this.name;
-    }
-  },
-  getClassName: function() {
-    if (this.varType != "" && this.varTypeIsSet) {
-      return this.varType;
-    }
-  },
-  getCurrentMethod: function() {
-    if (this.varType != "" && this.varTypeIsSet) {
-      return this.curValue;
-    }
-  },
-  renameClass: function(oldName, newName) {
-    if (this.varType != "" && this.varTypeIsSet) {
-      if (Blockly.Names.equals(oldName, this.varType)) {
-        this.varType = newName;
-      }
-    }
-  },
-  update: function(oldName, legalName) {
-    if (this.varType != "" && this.varTypeIsSet) {
-      this.getDropDown(oldName, legalName);
-    }
-  },
-  getDropDown: function(oldName, newName) {
-    if (!this.isInFlyout) {
-      var methods = Blockly.Class.getMethods(Blockly.getMainWorkspace(), this.getClassName());
-      var classVariables =
-        Blockly.Class.getClassVariables(Blockly.getMainWorkspace(), this.getClassName()) || [];
-      if (
-        this.methods.length != methods.length ||
-        oldName ||
-        this.classVariables.length != classVariables.length
-      ) {
-        //remove previous Dropdown
-        if (this.getInput("Data")) {
-          this.removeInput("Data");
-        }
-        this.methods = methods;
-        this.classVariables = classVariables;
-
-        if (this.methods.length != 0 || this.classVariables.length != 0) {
-          var options = [];
-          // console.log("oldName:    " + oldName);
-          // console.log("newName       " + newName);
-          // console.log("this.curValue:   " + this.curValue);
-
-          //make array of method names, if a mehtod gets renamed we need to
-          // store the new Value newName
-          var methodNames = methods.map(method => {
-            if (method.getFieldValue("NAME") == oldName) return newName;
-            return method.getFieldValue("NAME");
-          });
-          if (this.curValue == oldName) {
-            this.curValue = newName;
-          }
-
-          //remove current value if block is not in the class anymore
-          if (
-            !methodNames.includes(this.curValue) &&
-            !this.classVariables.includes(this.curValue)
-          ) {
-            this.curValue = "";
-            this.typeOfValue = "";
-          }
-          if (this.curValue) {
-            if (this.classVariables.includes(this.curValue)) {
-              this.typeOfValue = "attribute";
-              options.push([this.curValue, this.curValue]);
-            } else {
-              this.typeOfValue = "method";
-              options.push([this.curValue + "()", this.curValue]);
-            }
-          }
-          for (var i = 0; i < this.classVariables.length; i++) {
-            if (classVariables[i] == this.curValue && this.typeOfValue == "attribute") continue;
-            options.push([classVariables[i], classVariables[i]]);
-          }
-          for (var i = 0; i < methodNames.length; i++) {
-            if (methodNames[i] == this.curValue && this.typeOfValue == "method") continue;
-            options.push([
-              this.methods[i].getFieldValue("NAME") + "()",
-              this.methods[i].getFieldValue("NAME")
-            ]);
-          }
-          var dropdown = new Blockly.FieldDropdown(options);
-          this.appendDummyInput("Data").appendField(dropdown, "METHODS");
-        }
-      }
-    }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: "%{BKY_VARIABLES_DYNAMIC_HUE}",
+    tooltip: "%{BKY_VARIABLES_SET_TOOLTIP}",
+    helpUrl: "%{BKY_VARIABLES_SET_HELPURL}",
+    extensions: ["contextMenu_variableDynamicSetterGetter"]
   }
-};
+]); // END JSON EXTRACT (Do not delete this comment.)
 /**
  * Mixin to add context menu items to create getter/setter blocks for this
  * setter/getter.
