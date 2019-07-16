@@ -112,37 +112,11 @@ Blockly.VariablesDynamic.flyoutCategoryBlocks = function(workspace) {
 
   var varTypes = workspace.getVariableTypes();
   var xmlList = [];
-  // if (variableModelList.length > 0) {
-  //   console.log("ulu");
-  //   if (Blockly.Blocks["variables_set_dynamic"]) {
-  //     console.log("ulul");
-  //     var firstVariable = variableModelList[0];
-  //     var gap = 24;
-  //     var blockText =
-  //       "<xml>" +
-  //       '<block type="variables_set_dynamic" gap="' +
-  //       gap +
-  //       '">' +
-  //       Blockly.Variables.generateVariableFieldXmlString(firstVariable) +
-  //       "</block>" +
-  //       "</xml>";
-  //     var block = Blockly.Xml.textToDom(blockText).firstChild;
-  //     xmlList.push(block);
-  //   }
-  //   if (Blockly.Blocks["variables_get_dynamic"]) {
-  //     for (var i = 0, variable; (variable = variableModelList[i]); i++) {
-  //       var blockText =
-  //         "<xml>" +
-  //         '<block type="variables_get_dynamic" gap="8">' +
-  //         Blockly.Variables.generateVariableFieldXmlString(variable) +
-  //         "</block>" +
-  //         "</xml>";
-  //       var block = Blockly.Xml.textToDom(blockText).firstChild;
-  //       xmlList.push(block);
-  //     }
-  //   }
-  // }
+  var primitive_type = false;
   for (var i = 0; i < varTypes.length; i++) {
+    if (varTypes[i] == "Number" || varTypes[i] == "String" || varTypes[i] == "Colour")
+      primitive_type = true;
+
     var variableList = workspace.getVariablesOfType(varTypes[i]);
     if (variableList.length > 0) {
       //TODO: Add label or something between different blocks
@@ -173,24 +147,38 @@ Blockly.VariablesDynamic.flyoutCategoryBlocks = function(workspace) {
         xmlList.push(block);
       }
 
-      if (varTypes[i] == "Number" || varTypes[i] == "String" || varTypes[i] == "Colour") continue;
-      for (var j = 0, variable; (variable = variableList[j]); j++) {
-        var gap = 8;
-        if (j == variableList.length - 1) {
-          gap = 20;
+      if (primitive_type) {
+        for (var j = 1, variable; (variable = variableList[j]); j++) {
+          if (Blockly.Blocks["variables_get"]) {
+            var blockText =
+              "<xml>" +
+              '<block type="variables_get" gap="8">' +
+              Blockly.Variables.generateVariableFieldXmlString(variable) +
+              "</block>" +
+              "</xml>";
+            var block = Blockly.Xml.textToDom(blockText).firstChild;
+            xmlList.push(block);
+          }
         }
+      } else {
+        for (var j = 0, variable; (variable = variableList[j]); j++) {
+          var gap = 8;
+          if (j == variableList.length - 1) {
+            gap = 20;
+          }
 
-        if (Blockly.Blocks["object_variables_get"]) {
-          var blockText =
-            "<xml>" +
-            '<block type="object_variables_get" gap="' +
-            gap +
-            '">' +
-            Blockly.Variables.generateVariableFieldXmlString(variable) +
-            "</block>" +
-            "</xml>";
-          var block = Blockly.Xml.textToDom(blockText).firstChild;
-          xmlList.push(block);
+          if (Blockly.Blocks["object_variables_get"]) {
+            var blockText =
+              "<xml>" +
+              '<block type="object_variables_get" gap="' +
+              gap +
+              '">' +
+              Blockly.Variables.generateVariableFieldXmlString(variable) +
+              "</block>" +
+              "</xml>";
+            var block = Blockly.Xml.textToDom(blockText).firstChild;
+            xmlList.push(block);
+          }
         }
       }
     }
