@@ -114,13 +114,16 @@ Blockly.VariablesDynamic.flyoutCategoryBlocks = function(workspace) {
   var xmlList = [];
   var primitive_type = false;
   for (var i = 0; i < varTypes.length; i++) {
-    if (varTypes[i] == "Number" || varTypes[i] == "String" || varTypes[i] == "Colour")
+    if (
+      varTypes[i] == "Number" ||
+      varTypes[i] == "String" ||
+      varTypes[i] == "Colour" ||
+      varTypes[i] == ""
+    )
       primitive_type = true;
 
     var variableList = workspace.getVariablesOfType(varTypes[i]);
     if (variableList.length > 0) {
-      //TODO: Add label or something between different blocks
-      //  var labelText = "<label text = " + varTypes[i] + "></label>";
       var firstVariable = variableList[0];
 
       if (Blockly.Blocks["variables_set"]) {

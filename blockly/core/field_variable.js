@@ -401,6 +401,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
   var type = this.variable_.type;
   if (workspace) {
     var globalVarList = workspace.getVariableOfScope("global");
+    console.log(globalVarList);
     for (var i = 0; i < globalVarList.length; i++) {
       if (globalVarList[i].type == type)
         options.push([globalVarList[i].name, globalVarList[i].getId()]);
@@ -421,7 +422,7 @@ Blockly.FieldVariable.dropdownCreate = function() {
   if (Blockly.Msg["DELETE_VARIABLE"]) {
     options.push([Blockly.Msg["DELETE_VARIABLE"].replace("%1", name), Blockly.DELETE_VARIABLE_ID]);
   }
-
+  console.log(options);
   return options;
 };
 

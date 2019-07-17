@@ -303,6 +303,11 @@ Blockly.VariableMap.prototype.getVariableOfScope = function(scope) {
  * @param {!Blockly.VariableModel} variable Variable to delete.
  */
 Blockly.VariableMap.prototype.deleteVariable = function(variable) {
+  //@Joans Knerr
+  // delete Variabel from scopeMap_
+  var scopeList = this.scopeMap_[variable.getScope()];
+  scopeList.delete(variable);
+
   var variableList = this.variableMap_[variable.type];
   for (var i = 0, tempVar; (tempVar = variableList[i]); i++) {
     if (tempVar.getId() == variable.getId()) {

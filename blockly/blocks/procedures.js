@@ -499,33 +499,47 @@ Blockly.Blocks["procedures_mutatorcontainer"] = {
       this.mutatorParentBlock.type == "class_constructor"
     ) {
       var currentBlock = this.mutatorParentBlock.parentBlock_;
-      while (currentBlock.type != "class_class") {
-        if (currentBlock.parentBlock_) {
-          currentBlock = currentBlock.parentBlock_;
-        } else {
-          break;
+      if (currentBlock) {
+        while (currentBlock.type != "class_class") {
+          if (currentBlock.parentBlock_) {
+            currentBlock = currentBlock.parentBlock_;
+          } else {
+            break;
+          }
         }
+        var className = currentBlock.getClassDef();
+        var classVariables = currentBlock.workspace.getVariableOfScope(className);
+        var varNames = [];
+        if (classVariables) varNames = classVariables.map(x => x.name);
+        this.varNames = varNames;
       }
-      var className = currentBlock.getClassDef();
-      var classVariables = currentBlock.workspace.getVariableOfScope(className);
-      var varNames = [];
-      if (classVariables) varNames = classVariables.map(x => x.name);
-      this.varNames = varNames;
+      var varBlock = this.getInputTargetBlock("STACK");
+      while (varBlock) {
+        var varName = varBlock.getFieldValue("NAME");
+        while (this.varNames.includes(varName)) {
+          var r = varName.match(/^(.*?)(\d+)$/);
+          if (!r) {
+            varName += "2";
+          } else {
+            varName = r[1] + (parseInt(r[2], 10) + 1);
+          }
+        }
+        varBlock.setFieldValue(varName, "NAME");
+        this.varNames.push(varName);
+        varBlock = varBlock.nextConnection && varBlock.nextConnection.targetBlock();
+      }
     }
-    var varBlock = this.getInputTargetBlock("STACK");
-    while (varBlock) {
-      var varName = varBlock.getFieldValue("NAME");
-      while (this.varNames.includes(varName)) {
-        var r = varName.match(/^(.*?)(\d+)$/);
-        if (!r) {
-          varName += "2";
-        } else {
-          varName = r[1] + (parseInt(r[2], 10) + 1);
-        }
+  },
+  deleteIntermediateVars_: function(newText) {
+    var outerWs = Blockly.Mutator.findParentWs(this.sourceBlock_.workspace);
+    if (!outerWs) {
+      return;
+    }
+    for (var i = 0; i < this.createdVariables_.length; i++) {
+      var model = this.createdVariables_[i];
+      if (model.name != newText) {
+        outerWs.deleteVariableById(model.getId());
       }
-      varBlock.setFieldValue(varName, "NAME");
-      this.varNames.push(varName);
-      varBlock = varBlock.nextConnection && varBlock.nextConnection.targetBlock();
     }
   }
 };
@@ -605,7 +619,10 @@ Blockly.Blocks["procedures_mutatorarg"] = {
    * @this Blockly.FieldTextInput
    */
   deleteIntermediateVars_: function(newText) {
+    console.log(this.createdVariables_);
     var outerWs = Blockly.Mutator.findParentWs(this.sourceBlock_.workspace);
+    console.log(outerWs);
+
     if (!outerWs) {
       return;
     }
