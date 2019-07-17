@@ -58,7 +58,6 @@ Blockly.JavaScript["variables_set"] = function(block) {
   );
   var varBlock = block.workspace.getVariable(name, opt_type);
 
-  console.log(varBlock);
   var argument0 =
     Blockly.JavaScript.valueToCode(block, "VALUE", Blockly.JavaScript.ORDER_ASSIGNMENT) || "0";
 
@@ -102,7 +101,7 @@ Blockly.JavaScript["object_variables_get"] = function(block) {
   if (block.isReturn) {
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
   } else {
-    code += ";\n"
+    code += ";\n";
     return code;
   }
 };

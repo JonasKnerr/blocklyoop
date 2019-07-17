@@ -59,7 +59,7 @@ Blockly.JavaScript["class_class"] = function(block) {
   code += "}\n";
   code = Blockly.JavaScript.scrub_(block, code);
 
-  Blockly.JavaScript.definitions_["%" + name] = code;
+  Blockly.JavaScript.definitions_["%" + className] = code;
   return null;
 };
 

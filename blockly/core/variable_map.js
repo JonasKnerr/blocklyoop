@@ -236,24 +236,25 @@ Blockly.VariableMap.prototype.renameScope = function(oldName, newName) {
  *@Jonas Knerr
  *changes the scope of a variable
  */
-Blockly.VariableMap.prototype.changeVariableScope = function(name, oldScope, newScope) {
-  var variable = this.getVariable(name);
-
-  this.deleteVariableFromScope(variable, variable.getScope());
-  variable.setScope(newScope);
-  var variables = new Set();
-  if (this.scopeMap_[oldScope]) {
-    var variables = this.scopeMap_[oldScope];
-    delete this.scopeMap_[oldScope];
-    this.scopeMap_[newScope] = variables;
+Blockly.VariableMap.prototype.changeVariableScope = function(name, oldScope, newScope, opt_type) {
+  var variable = this.getVariable(name, opt_type);
+  if (variable) {
+    this.deleteVariableFromScope(variable, variable.getScope());
+    variable.setScope(newScope);
+    var variables = new Set();
+    if (this.scopeMap_[oldScope]) {
+      var variables = this.scopeMap_[oldScope];
+      delete this.scopeMap_[oldScope];
+      this.scopeMap_[newScope] = variables;
+    }
+    if (this.scopeMap_[newScope]) {
+      this.scopeMap_[newScope].add(variable);
+    } else {
+      variables.add(variable);
+      this.scopeMap_[newScope] = variables;
+    }
+    return this.scopeMap_;
   }
-  if (this.scopeMap_[newScope]) {
-    this.scopeMap_[newScope].add(variable);
-  } else {
-    variables.add(variable);
-    this.scopeMap_[newScope] = variables;
-  }
-  return this.scopeMap_;
 };
 /*
  *@Jonas Knerr

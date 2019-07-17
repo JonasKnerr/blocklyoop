@@ -171,9 +171,11 @@ Blockly.Blocks["class_class"] = {
     while (attributeCount <= this.attributeCount) {
       attributeCount++;
       if (this.getInputTargetBlock("attribute" + attributeCount)) {
+        var type = this.getInputTargetBlock("attribute" + attributeCount).inputList[0].fieldRow[0]
+          .variable_.type;
         var name = this.getInputTargetBlock("attribute" + attributeCount).inputList[0].fieldRow[0]
           .variable_.name;
-        this.workspace.changeVariableScope(name, this.oldName, this.getClassDef());
+        this.workspace.changeVariableScope(name, this.oldName, this.getClassDef(), type);
         attributeInputs.push(name);
       }
     }
