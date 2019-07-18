@@ -149,7 +149,6 @@ Blockly.Blocks["procedures_defnoreturn"] = {
    * @this Blockly.Block
    */
   domToMutation: function(xmlElement) {
-    console.log("domToMutation");
     this.arguments_ = [];
     this.argumentVarModels_ = [];
     for (var i = 0, childNode; (childNode = xmlElement.childNodes[i]); i++) {
@@ -223,12 +222,7 @@ Blockly.Blocks["procedures_defnoreturn"] = {
     while (paramBlock) {
       var varName = paramBlock.getFieldValue("NAME");
       var i = 1;
-      // console.log(this.arguments_);
-      // while (this.arguments_.includes(varName)) {
-      //   varName = varName + i;
-      //   i++;
-      // }
-      // console.log(varName);
+
       this.arguments_.push(varName);
       var variable = this.workspace.getVariable(varName, "");
       if (variable != null) {
@@ -604,12 +598,6 @@ Blockly.Blocks["procedures_mutatorarg"] = {
     }
     return varName;
   },
-  onchange: function() {
-    // console.log(this.parentBlock_);
-    // if (this.parentBlock_) {
-    //   this.parentBlock = this.parentBlock_;
-    // }
-  },
   /**
    * Called when focusing away from the text field.
    * Deletes all variables that were created as the user typed their intended
@@ -619,9 +607,7 @@ Blockly.Blocks["procedures_mutatorarg"] = {
    * @this Blockly.FieldTextInput
    */
   deleteIntermediateVars_: function(newText) {
-    console.log(this.createdVariables_);
     var outerWs = Blockly.Mutator.findParentWs(this.sourceBlock_.workspace);
-    console.log(outerWs);
 
     if (!outerWs) {
       return;
