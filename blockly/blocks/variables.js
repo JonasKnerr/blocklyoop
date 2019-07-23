@@ -328,6 +328,7 @@ Blockly.Blocks["object_variables_get"] = {
   },
   update: function(oldName, legalName) {
     if (this.varTypeIsSet) {
+      console.log("update");
       this.getDropDown(oldName, legalName);
       this.setInputsInline(this.getInputsInline());
     }
@@ -336,19 +337,18 @@ Blockly.Blocks["object_variables_get"] = {
     if (this.varTypeIsSet) {
       var varModel = this.inputList[0].fieldRow[0].getVariable();
       var classBlock = Blockly.Class.getClassByName(Blockly.getMainWorkspace(), varModel.type);
-
       var methods = classBlock.methods;
+
+      var methodEqual = Blockly.Class.arraysEqual(methods, this.methods);
       var classVariables =
         Blockly.Class.getClassVariables(Blockly.getMainWorkspace(), this.getClassName()) || [];
-      if (
-        this.methods.length != methods.length ||
-        oldName ||
-        this.classVariables.length != classVariables.length
-      ) {
+      if (!methodEqual || oldName || this.classVariables.length != classVariables.length) {
         //remove previous Dropdown
         if (this.getInput("Data")) {
           this.removeInput("Data");
         }
+        console.log(methods);
+        console.log(this.methods);
         this.methods = methods;
         this.classVariables = classVariables;
 
