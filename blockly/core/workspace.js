@@ -487,8 +487,8 @@ Blockly.Workspace.prototype.getVariableScopes = function() {
 /**
  *@Jonas Knerr
  */
-Blockly.Workspace.prototype.changeVariableScope = function(name, oldScope, newScope, opt_type) {
-  return this.variableMap_.changeVariableScope(name, oldScope, newScope, opt_type);
+Blockly.Workspace.prototype.changeVariableScope = function(name, oldScope, newScope) {
+  return this.variableMap_.changeVariableScope(name, oldScope, newScope);
 };
 /**
  *@Jonas Knerr

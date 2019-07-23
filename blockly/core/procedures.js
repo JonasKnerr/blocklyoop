@@ -169,7 +169,6 @@ Blockly.Procedures.rename = function(name) {
       if (blocks[i].renameProcedure) {
         blocks[i].renameProcedure(oldName, legalName);
       }
-      //Updates Instances if the name of a method changes @Jonas Knerr
       if (blocks[i].getInstanceName) {
         blocks[i].update(oldName, legalName);
       }

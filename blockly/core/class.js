@@ -129,7 +129,7 @@ Blockly.Class.getCallers = function(name, workspace) {
  * Mutates all calling blocks if something changes in a control_class block
  */
 Blockly.Class.mutateCallers = function(block) {
-  callers = Blockly.Class.getCallers(block.getClassDef(), block.workspace);
+  var callers = Blockly.Class.getCallers(block.getClassDef(), block.workspace);
   for (var i = 0; i < callers.length; i++) {
     callers[i].update();
   }

@@ -73,3 +73,8 @@ Blockly.JavaScript["class_get_instance"] = function(block) {
   var code = "new " + className + "(" + args.join(", ") + ")";
   return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
+
+Blockly.JavaScript["class_constructor"] = function(block) {
+  var code = "/*Konstruktoren sollten Klassen zugewiesen werden*/\n constructor(){\n }\n";
+  return code;
+};

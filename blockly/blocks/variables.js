@@ -67,7 +67,6 @@ var object_variable_get_json = {
       variable: "%{BKY_VARIABLES_DEFAULT_NAME}"
     }
   ],
-  output: null,
   variable_scope: "global",
   helpUrl: "%{BKY_VARIABLES_GET_HELPURL}",
   tooltip: "%{BKY_VARIABLES_GET_TOOLTIP}",
@@ -171,12 +170,26 @@ Blockly.Blocks["object_variables_get"] = {
     this.varTypeIsSet = false;
     this.methods = [];
     this.classVariables = [];
+    this.method = "";
     this.args = 0;
     this.argNames = [];
     this.colourIsSet = false;
     this.setInputsInline(true);
   },
   onchange: function() {
+    if (this.isInFlyout) {
+      var varModel = this.inputList[0].fieldRow[0].getVariable();
+      var classBlock = Blockly.Class.getClassByName(Blockly.getMainWorkspace(), varModel.type);
+      var setReturn = false;
+      if (
+        classBlock.getInputTargetBlock("METHODS0") &&
+        classBlock.getInputTargetBlock("METHODS0").callType_ == "class_function_return"
+      ) {
+        setReturn = true;
+      }
+      this.getDropDown();
+      this.setType(setReturn);
+    }
     if (!this.colourIsSet) {
       var varModel = this.inputList[0].fieldRow[0].getVariable();
       var classBlock = Blockly.Class.getClassByName(Blockly.getMainWorkspace(), varModel.type);
@@ -205,7 +218,12 @@ Blockly.Blocks["object_variables_get"] = {
       }
       if (this.getFieldValue("METHODS") && !this.isInFlyout && !isVar) {
         this.typeOfValue = "method";
+        var checkReturn = false;
+        if (this.method != this.getFieldValue("METHODS")) {
+          checkReturn = true;
+        }
         var method = this.getFieldValue("METHODS");
+        this.method = method;
         //check if Method has return value and adjust block
         var blocks = this.workspace.getAllBlocks();
         for (var i = 0; i < blocks.length; i++) {
@@ -216,7 +234,7 @@ Blockly.Blocks["object_variables_get"] = {
           }
         }
         var isReturn;
-        if (methodBlock) {
+        if (methodBlock && checkReturn) {
           if (methodBlock.type == "class_function_return") {
             isReturn = true;
           } else if (methodBlock.type == "class_function_noreturn") {
@@ -264,27 +282,26 @@ Blockly.Blocks["object_variables_get"] = {
     }
   },
   setType: function(isReturn) {
-    if (this.varType != "" && this.varTypeIsSet) {
-      if (isReturn) {
-        //remove Previous and Next Connections before removing the Statement
-        if (this.nextConnection) {
-          if (this.nextConnection.isConnected()) {
-            this.nextConnection.disconnect();
-          }
+    console.log(isReturn);
+    if (isReturn) {
+      //remove Previous and Next Connections before removing the Statement
+      if (this.nextConnection) {
+        if (this.nextConnection.isConnected()) {
+          this.nextConnection.disconnect();
         }
-        if (this.previousConnection) {
-          if (this.previousConnection.isConnected()) {
-            this.previousConnection.disconnect();
-          }
-        }
-        this.setNextStatement(false);
-        this.setPreviousStatement(false);
-        this.setOutput(true);
-      } else {
-        this.setOutput(false);
-        this.setNextStatement(true);
-        this.setPreviousStatement(true);
       }
+      if (this.previousConnection) {
+        if (this.previousConnection.isConnected()) {
+          this.previousConnection.disconnect();
+        }
+      }
+      this.setNextStatement(false);
+      this.setPreviousStatement(false);
+      this.setOutput(true);
+    } else {
+      this.setOutput(false);
+      this.setNextStatement(true);
+      this.setPreviousStatement(true);
     }
   },
   getInstanceName: function() {
@@ -316,8 +333,11 @@ Blockly.Blocks["object_variables_get"] = {
     }
   },
   getDropDown: function(oldName, newName) {
-    if (!this.isInFlyout) {
-      var methods = Blockly.Class.getMethods(Blockly.getMainWorkspace(), this.getClassName());
+    if (this.varTypeIsSet) {
+      var varModel = this.inputList[0].fieldRow[0].getVariable();
+      var classBlock = Blockly.Class.getClassByName(Blockly.getMainWorkspace(), varModel.type);
+
+      var methods = classBlock.methods;
       var classVariables =
         Blockly.Class.getClassVariables(Blockly.getMainWorkspace(), this.getClassName()) || [];
       if (
@@ -325,7 +345,6 @@ Blockly.Blocks["object_variables_get"] = {
         oldName ||
         this.classVariables.length != classVariables.length
       ) {
-        console.log(methods);
         //remove previous Dropdown
         if (this.getInput("Data")) {
           this.removeInput("Data");
@@ -382,6 +401,17 @@ Blockly.Blocks["object_variables_get"] = {
         }
       }
     }
+    // } else {
+    //   var varModel = this.inputList[0].fieldRow[0].getVariable();
+    //   var classBlock = Blockly.Class.getClassByName(Blockly.getMainWorkspace(), varModel.type);
+    //   var options = [];
+    //   options.push(["Funktion", "Funktion"]);
+    //   var dropdown = new Blockly.FieldDropdown(options);
+    //   if (this.getInput("Data")) {
+    //     this.removeInput("Data");
+    //   }
+    //   this.appendDummyInput("Data").appendField(dropdown, "METHODS");
+    // }
   }
 };
 

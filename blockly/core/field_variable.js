@@ -204,7 +204,7 @@ Blockly.FieldVariable.prototype.setValue = function(id) {
     if (this.variable_.getScope() != "global" && this.sourceBlock_.type != "variables_set") {
       workspace.changeVariableScope(this.variable_.name, false, "global");
       this.variable_.setScope("global");
-      var blocks = workspace.getAllVariableBlocks(name);
+      var blocks = workspace.getAllVariableBlocks();
       for (var i = 0; i < blocks.length; i++) {
         if (blocks[i].inputList[0].fieldRow[0].text_ == variable.name) {
           for (var j = 0; j < globalVars.length; j++) {
@@ -414,14 +414,10 @@ Blockly.FieldVariable.dropdownCreate = function() {
     }
   }
   this.options = options;
-  if (type != "") {
-    options.push(["Change Class", Blockly.RENAME_CLASS_ID]);
-  }
   options.push([Blockly.Msg["RENAME_VARIABLE"], Blockly.RENAME_VARIABLE_ID]);
   if (Blockly.Msg["DELETE_VARIABLE"]) {
     options.push([Blockly.Msg["DELETE_VARIABLE"].replace("%1", name), Blockly.DELETE_VARIABLE_ID]);
   }
-  console.log(options);
   return options;
 };
 
