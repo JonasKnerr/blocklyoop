@@ -1,6 +1,6 @@
 Dies ist eine innerhalb meiner Bachelorarbeit implementierte objektorientierte Erweiterung für Blockly. Blockly gitHub: https://github.com/google/blockly.
 
-In der index.html im Ordner blockly, sind die grundlegenden Funktionen von Blockly sowie die Hinzugefügten Klassen blöcke eingebunden,
+In der index.html im Ordner blockly, sind die grundlegenden Funktionen von Blockly sowie die hinzugefügten Klassenblöcke eingebunden,
 
 Zum Benutzen muss zu erst ein Klassenblöcke erstellt werden. Dieser kann über den Mutator um beliebig viele Attribute erweitert werden. Methoden befinden sich unter der Rubrik "Klasse", diese können in belibiger Anzahl zur Klasse hinzugefügt werden.
 
