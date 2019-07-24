@@ -218,10 +218,7 @@ Blockly.Blocks["object_variables_get"] = {
       }
       if (this.getFieldValue("METHODS") && !this.isInFlyout && !isVar) {
         this.typeOfValue = "method";
-        var checkReturn = false;
-        if (this.method != this.getFieldValue("METHODS")) {
-          checkReturn = true;
-        }
+
         var method = this.getFieldValue("METHODS");
         this.method = method;
         //check if Method has return value and adjust block
@@ -234,7 +231,7 @@ Blockly.Blocks["object_variables_get"] = {
           }
         }
         var isReturn;
-        if (methodBlock && checkReturn) {
+        if (methodBlock) {
           if (methodBlock.type == "class_function_return") {
             isReturn = true;
           } else if (methodBlock.type == "class_function_noreturn") {
