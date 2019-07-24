@@ -155,7 +155,6 @@ Blockly.VariablesDynamic.flyoutCategoryBlocks = function(workspace) {
         var block = Blockly.Xml.textToDom(blockText).firstChild;
         xmlList.push(block);
       }
-      console.log(variableList);
       if (primitive_type) {
         for (var j = 1, variable; (variable = variableList[j]); j++) {
           if (Blockly.Blocks["variables_get"]) {

@@ -279,7 +279,6 @@ Blockly.Blocks["object_variables_get"] = {
     }
   },
   setType: function(isReturn) {
-    console.log(isReturn);
     if (isReturn) {
       //remove Previous and Next Connections before removing the Statement
       if (this.nextConnection) {
@@ -325,7 +324,6 @@ Blockly.Blocks["object_variables_get"] = {
   },
   update: function(oldName, legalName) {
     if (this.varTypeIsSet) {
-      console.log("update");
       this.getDropDown(oldName, legalName);
       this.setInputsInline(this.getInputsInline());
     }
@@ -348,9 +346,6 @@ Blockly.Blocks["object_variables_get"] = {
 
       var methodEqual = Blockly.Class.arraysEqual(oldMethodNames, methodNames);
 
-      // console.log(oldMethodNames);
-      // console.log(methodNames);
-      // console.log(methodEqual);
       var classVariables =
         Blockly.Class.getClassVariables(Blockly.getMainWorkspace(), this.getClassName()) || [];
       if (!methodEqual || oldName || this.classVariables.length != classVariables.length) {
@@ -358,8 +353,6 @@ Blockly.Blocks["object_variables_get"] = {
         if (this.getInput("Data")) {
           this.removeInput("Data");
         }
-        console.log(methods);
-        console.log(this.methods);
         this.methods = methods;
         this.classVariables = classVariables;
 

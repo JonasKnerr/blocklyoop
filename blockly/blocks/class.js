@@ -110,6 +110,7 @@ Blockly.Blocks["class_class"] = {
     this.setColour(Blockly.Class.colour());
     this.setConstructor(true);
     this.setMutator(new Blockly.Mutator(["class_attribute"], this));
+    this.argumentVarModels_ = [];
     this.attributeCount = 0;
     this.methods = [];
     this.attributeInputs = [];
@@ -165,6 +166,7 @@ Blockly.Blocks["class_class"] = {
   changeScope: function() {
     var attributeCount = 0;
     var attributeInputs = [];
+    this.argumentVarModels_ = [];
     while (attributeCount <= this.attributeCount) {
       attributeCount++;
       if (this.getInputTargetBlock("attribute" + attributeCount)) {
@@ -173,6 +175,9 @@ Blockly.Blocks["class_class"] = {
         var name = this.getInputTargetBlock("attribute" + attributeCount).inputList[0].fieldRow[0]
           .variable_.name;
         this.workspace.changeVariableScope(name, this.oldName, this.getClassDef(), type);
+        this.argumentVarModels_.push(
+          this.getInputTargetBlock("attribute" + attributeCount).inputList[0].fieldRow[0].variable_
+        );
         attributeInputs.push(name);
       }
     }
@@ -271,21 +276,54 @@ Blockly.Blocks["class_class"] = {
     }
   },
   mutationToDom: function() {
-    if (!this.atrributeCount && !this.methods.length) {
-      return null;
-    }
     var container = document.createElement("mutation");
-    if (this.attributeCount) {
-      container.setAttribute("attribute", this.attributeCount);
+
+    for (var i = 0; i < this.argumentVarModels_.length; i++) {
+      var parameter = document.createElement("arg");
+      var argModel = this.argumentVarModels_[i];
+      parameter.setAttribute("name", argModel.name);
+      parameter.setAttribute("varid", argModel.getId());
+      container.appendChild(parameter);
+    }
+
+    for (var i = 0; i < this.methods.length; i++) {
+      var parameter = document.createElement("method");
+      var methodModel = this.methods[i];
+      parameter.setAttribute("name", methodModel.getFieldValue("NAME"));
+      parameter.setAttribute("varid", methodModel.id);
+      container.appendChild(parameter);
     }
     return container;
   },
   domToMutation: function(xmlElement) {
-    this.atrributeCount = parseInt(xmlElement.getAttribute("attribute"), 10) || 0;
-    for (var i = 1; i < this.attributeCount; i++) {
-      this.appendValueInput("attribute" + i)
-        .setCheck(null)
-        .appendField("Attribute");
+    this.argumentVarModels_ = [];
+    this.attributeCount = 0;
+    this.attributeInputs = [];
+    this.methods = [];
+
+    for (var i = 0, childNode; (childNode = xmlElement.childNodes[i]); i++) {
+      if (childNode.nodeName.toLowerCase() == "arg") {
+        var varName = childNode.getAttribute("name");
+        var varId = childNode.getAttribute("varid") || childNode.getAttribute("varId");
+        this.attributeCount++;
+        this.attributeInputs.push(varName);
+        var variable = Blockly.Variables.getOrCreateVariablePackage(
+          this.workspace,
+          varId,
+          varName,
+          ""
+        );
+        if (variable != null) {
+          this.argumentVarModels_.push(variable);
+        } else {
+          console.log("Failed to create a variable with name " + varName + ", ignoring.");
+        }
+      }
+      if (childNode.nodeName.toLowerCase() == "method") {
+        var varName = childNode.getAttribute("name");
+        var varId = childNode.getAttribute("varid") || childNode.getAttribute("varId");
+        console.log(this.workspace.getAllBlocks());
+      }
     }
   },
   getAttributeInputs: function() {

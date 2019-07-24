@@ -1,42 +1,164 @@
 <xml>
   <variables>
-    <variable type="Klasse" id="udxZ?1-$Y3WlsI1`FkmQ">
+    <variable type="Stack" id="=B7SSTeObi8$TAnflV=U">
+      myStack
+    </variable>
+    <variable type="" id="uzlNl,Fkr1Jg:5fgnB9:">
       x
     </variable>
-    <variable type="Klasse" id="-/fzcN}bA`Ax+s8C-UeK">
-      y
+    <variable type="" id="Np$Q,6k7U`ZhfnOVfi.+">
+      list
     </variable>
   </variables>
-  <block type="class_class" id="ZVg{GQ?y_tlA!!|XIP|g" x="297" y="58">
-    <field name="NAME">Klasse</field>
-    <statement name="METHODS">
-      <block type="class_function_noreturn" id=")q,)^iOGKQBDCo,O9gNO">
-        <field name="NAME">Funktion</field>
+  <block type="class_class" id="0|-{BzxJPhWfG!z.=pmu" x="420" y="61">
+    <mutation attribute="1" />
+    <field name="NAME">Stack</field>
+    <value name="attribute1">
+      <block type="variables_get" id="aJDmsB/H+gRX=7y-ofIp">
+        <field name="VAR" id="Np$Q,6k7U`ZhfnOVfi.+" variabletype="">
+          list
+        </field>
+      </block>
+    </value>
+    <statement name="CONSTRUCTOR">
+      <block type="class_constructor" id="M@zy#d)n`;uaQ7V/w;(|">
         <comment pinned="false" h="80" w="160">
           Describe this function...
         </comment>
+        <statement name="STACK">
+          <block type="variables_set" id="F-I$8,S2Zt[2UXT=r1=)">
+            <field name="VAR" id="Np$Q,6k7U`ZhfnOVfi.+" variabletype="">
+              list
+            </field>
+            <value name="VALUE">
+              <block type="lists_create_with" id="=+gccq!$!(QHPt2QOzg+">
+                <mutation items="0" />
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <statement name="METHODS0">
+      <block type="class_function_noreturn" id="~XBL^A04taE-MP%vsd.h">
+        <mutation>
+          <arg name="x" varid="uzlNl,Fkr1Jg:5fgnB9:" />
+        </mutation>
+        <field name="NAME">push</field>
+        <comment pinned="false" h="80" w="160">
+          Describe this function...
+        </comment>
+        <statement name="STACK">
+          <block type="lists_setIndex" id=";yI5#*kSoN*^Ru*{njFU">
+            <mutation at="true" />
+            <field name="MODE">SET</field>
+            <field name="WHERE">FROM_END</field>
+            <value name="LIST">
+              <block type="variables_get" id="hsM7cRNev*0MR|u=:!AF">
+                <field name="VAR" id="Np$Q,6k7U`ZhfnOVfi.+" variabletype="">
+                  list
+                </field>
+              </block>
+            </value>
+            <value name="AT">
+              <block type="math_number" id="hY[XX1jSQW~N.DY$i(*O">
+                <field name="NUM">0</field>
+              </block>
+            </value>
+            <value name="TO">
+              <block type="variables_get" id="6Z,r9$$2#*91{otj#u^[">
+                <field name="VAR" id="uzlNl,Fkr1Jg:5fgnB9:" variabletype="">
+                  x
+                </field>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </statement>
+    <statement name="METHODS1">
+      <block type="class_function_return" id="dxt|.|Z=.e?A`N(%n9lU">
+        <mutation statements="false" />
+        <field name="NAME">pop</field>
+        <comment pinned="false" h="80" w="160">
+          Describe this function...
+        </comment>
+        <value name="RETURN">
+          <block type="lists_getIndex" id="Lfyd9bQnKxXkAGHP?n2*">
+            <mutation statement="false" at="false" />
+            <field name="MODE">GET_REMOVE</field>
+            <field name="WHERE">LAST</field>
+            <value name="VALUE">
+              <block type="variables_get" id="tsb%e#mLmGc*dor]I:}1">
+                <field name="VAR" id="Np$Q,6k7U`ZhfnOVfi.+" variabletype="">
+                  list
+                </field>
+              </block>
+            </value>
+          </block>
+        </value>
       </block>
     </statement>
   </block>
-  <block type="variables_set" id="(U6]_4d1xs+@h[g8ZSOv" x="359" y="267">
-    <field name="VAR" id="udxZ?1-$Y3WlsI1`FkmQ" variabletype="Klasse">
-      x
+  <block type="variables_set" id="$Yu-q)W#Kju^@^t|c[a!" x="59" y="194">
+    <field name="VAR" id="=B7SSTeObi8$TAnflV=U" variabletype="Stack">
+      myStack
     </field>
     <value name="VALUE">
-      <block type="class_get_instance" id="}qCypmJLduOppaf2.+Qj">
-        <mutation name="Klasse" />
+      <block type="class_get_instance" id="sn?4WsTeLh=PIJwh3.3_">
+        <mutation name="Stack" />
+      </block>
+    </value>
+  </block>
+  <block type="object_variables_get" id="cQ,NVH!4uY;;JXr+3Ai3" x="59" y="284">
+    <field name="VAR" id="=B7SSTeObi8$TAnflV=U" variabletype="Stack">
+      myStack
+    </field>
+    <field name="METHODS">push</field>
+    <value name="ARG0">
+      <block type="math_number" id="otL[s)cT,3vYIC]e2Wz,">
+        <field name="NUM">1</field>
       </block>
     </value>
     <next>
-      <block type="variables_set" id="2#K_-Z:2i5p`m9pI653A">
-        <field name="VAR" id="-/fzcN}bA`Ax+s8C-UeK" variabletype="Klasse">
-          y
+      <block type="object_variables_get" id="RLL0y@bG;o6(-ENc)-t?">
+        <field name="VAR" id="=B7SSTeObi8$TAnflV=U" variabletype="Stack">
+          myStack
         </field>
-        <value name="VALUE">
-          <block type="class_get_instance" id="n^e2gMvw]w^mPB1fnoU5">
-            <mutation name="Klasse" />
+        <field name="METHODS">push</field>
+        <value name="ARG0">
+          <block type="math_number" id="wI0S.39tKvl(]RpRn?H^">
+            <field name="NUM">2</field>
           </block>
         </value>
+        <next>
+          <block type="object_variables_get" id="59$fh,2)p!,y_/-aDv|1">
+            <field name="VAR" id="=B7SSTeObi8$TAnflV=U" variabletype="Stack">
+              myStack
+            </field>
+            <field name="METHODS">push</field>
+            <value name="ARG0">
+              <block type="math_number" id="%oFz!O[AK$+|(L~w-:zl">
+                <field name="NUM">3</field>
+              </block>
+            </value>
+            <next>
+              <block type="text_print" id="^,w]Ddn7Y6eFP[xEFBaU">
+                <value name="TEXT">
+                  <shadow type="text" id="/f*aP%7lvv|XO|F[f-b[">
+                    <field name="TEXT">abc</field>
+                  </shadow>
+                  <block type="object_variables_get" id="PpKTz)~TZ,L.YF.H(R7=">
+                    <field name="VAR" id="=B7SSTeObi8$TAnflV=U" variabletype="Stack">
+                      myStack
+                    </field>
+                    <field name="METHODS">pop</field>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </next>
       </block>
     </next>
   </block>

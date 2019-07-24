@@ -141,6 +141,7 @@ Blockly.Blocks["procedures_defnoreturn"] = {
     if (!this.hasStatements_) {
       container.setAttribute("statements", "false");
     }
+    console.log(container);
     return container;
   },
   /**

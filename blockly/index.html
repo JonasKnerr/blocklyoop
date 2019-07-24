@@ -2,6 +2,7 @@
 <html>
 <body>
   <script src="blockly_uncompressed.js"></script>
+  <!-- <script src="blocks_compressed.js"></script> -->
 
   <script src="generators/javascript.js"></script>
   <script src="generators/javascript/logic.js"></script>
@@ -27,11 +28,12 @@
   <script src="msg/js/en.js"></script>
 <h1>Blockly OOP</h1>
 
-<div>
-
-<code id ="code"></code>
-<div id="blocklyDiv" style="height: 700px; width: 1200px;"></div>
+<div style="display:flex">
+  <div id="blocklyDiv" style="height: 700px; width: 1200px;"></div>
+<span id ="code" style="white-space: pre-line"></span>
 </div>
+
+
 <xml id="toolbox" style="display: none">
   <!-- <category name="Logic" colour="210">...</category>
   <category name="Loops" colour="120">...</category>

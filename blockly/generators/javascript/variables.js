@@ -40,7 +40,7 @@ Blockly.JavaScript["variables_get"] = function(block) {
 
   var opt_type = block.varType || "";
   var varBlock = block.workspace.getVariable(name, opt_type);
-
+  console.log(varBlock);
   if (varBlock.getScope() != "global") {
     code = "this." + name;
   } else {
