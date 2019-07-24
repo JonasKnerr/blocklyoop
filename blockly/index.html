@@ -27,7 +27,11 @@
   <script src="msg/js/en.js"></script>
 <h1>Blockly OOP</h1>
 
+<div>
+
+<code id ="code"></code>
 <div id="blocklyDiv" style="height: 700px; width: 1200px;"></div>
+</div>
 <xml id="toolbox" style="display: none">
   <!-- <category name="Logic" colour="210">...</category>
   <category name="Loops" colour="120">...</category>
@@ -412,6 +416,7 @@ Blockly.Xml.domToWorkspace(document.getElementById("startBlocks"), workspace);
   var run = function() {
   Blockly.JavaScript.addReservedWords("code");
   var code = Blockly.JavaScript.workspaceToCode(workspace);
+  document.getElementById("code").innerHTML = code;
   console.log(code);
   try {
     eval(code);

@@ -339,7 +339,21 @@ Blockly.Blocks["object_variables_get"] = {
       var classBlock = Blockly.Class.getClassByName(Blockly.getMainWorkspace(), varModel.type);
       var methods = classBlock.methods;
 
-      var methodEqual = Blockly.Class.arraysEqual(methods, this.methods);
+      var oldMethodNames = this.methods.map(method => {
+        if (method.getFieldValue("NAME") == oldName) return newName;
+        return method.getFieldValue("NAME");
+      });
+
+      var methodNames = methods.map(method => {
+        if (method.getFieldValue("NAME") == oldName) return newName;
+        return method.getFieldValue("NAME");
+      });
+
+      var methodEqual = Blockly.Class.arraysEqual(oldMethodNames, methodNames);
+
+      // console.log(oldMethodNames);
+      // console.log(methodNames);
+      // console.log(methodEqual);
       var classVariables =
         Blockly.Class.getClassVariables(Blockly.getMainWorkspace(), this.getClassName()) || [];
       if (!methodEqual || oldName || this.classVariables.length != classVariables.length) {
@@ -357,10 +371,6 @@ Blockly.Blocks["object_variables_get"] = {
 
           //make array of method names, if a mehtod gets renamed we need to
           // store the new Value newName
-          var methodNames = methods.map(method => {
-            if (method.getFieldValue("NAME") == oldName) return newName;
-            return method.getFieldValue("NAME");
-          });
           if (this.curValue == oldName) {
             this.curValue = newName;
           }

@@ -169,9 +169,6 @@ Blockly.Procedures.rename = function(name) {
       if (blocks[i].renameProcedure) {
         blocks[i].renameProcedure(oldName, legalName);
       }
-      if (blocks[i].getInstanceName) {
-        blocks[i].update(oldName, legalName);
-      }
     }
   }
   return legalName;
