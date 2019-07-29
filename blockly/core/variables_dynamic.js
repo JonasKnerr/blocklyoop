@@ -118,8 +118,8 @@ Blockly.VariablesDynamic.flyoutCategoryBlocks = function(workspace) {
 
   var varTypes = workspace.getVariableTypes();
   var xmlList = [];
-  var primitive_type = false;
   for (var i = 0; i < varTypes.length; i++) {
+    var primitive_type = false;
     if (
       varTypes[i] == "Number" ||
       varTypes[i] == "String" ||

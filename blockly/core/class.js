@@ -104,6 +104,7 @@ Blockly.Class.getClassVariables = function(workspace, classname) {
     if (blocks[i].getStatement) {
       if (classname == blocks[i].getClassDef()) {
         variables_ = blocks[i].getAttributeInputs();
+        console.log(blocks[i].getAttributeInputs());
       }
     }
   }
