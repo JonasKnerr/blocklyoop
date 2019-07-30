@@ -64,6 +64,16 @@ Blockly.JavaScript["class_class"] = function(block) {
 };
 
 Blockly.JavaScript["class_get_instance"] = function(block) {
+  var argsCount = 0;
+  while (block.getInputTargetBlock("ARG" + argsCount)) {
+    argsCount++;
+  }
+  //Highlight Block if there are not enough parameters
+  if (block.args != argsCount) {
+    block.setHighlighted(true);
+  }else{
+    block.setHighlighted(false);
+  }
   var className = block.getInstanceDef()[0];
   var args = [];
   for (var i = 0; i < block.args; i++) {
