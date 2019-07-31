@@ -64,6 +64,7 @@ Blockly.JavaScript["class_class"] = function(block) {
 };
 
 Blockly.JavaScript["class_get_instance"] = function(block) {
+  var className = block.getInstanceDef()[0];
   var argsCount = 0;
   while (block.getInputTargetBlock("ARG" + argsCount)) {
     argsCount++;
@@ -71,10 +72,10 @@ Blockly.JavaScript["class_get_instance"] = function(block) {
   //Highlight Block if there are not enough parameters
   if (block.args != argsCount) {
     block.setHighlighted(true);
-  }else{
+    window.alert("Block new " + className + " hat zu wenige Paramter");
+  } else {
     block.setHighlighted(false);
   }
-  var className = block.getInstanceDef()[0];
   var args = [];
   for (var i = 0; i < block.args; i++) {
     args[i] =
